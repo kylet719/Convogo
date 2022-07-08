@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import Itinerary from "./components/Itinerary";
 
 function App() {
+  const [itineraryItems, setItineraryItems] = useState()
+
+  useEffect( () => {
+    const getTasks = async() => {
+      const taskFromServer = await fetchData()
+      setItineraryItems(taskFromServer)
+    }
+
+    getTasks()
+  }, [])
+
+  const fetchData = async () => {
+    const res = await fetch('http://localhost:5000/events')
+    const data = await res.json()
+    return data
+  }
+
+  console.log(itineraryItems)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <Itinerary />
+      <button onClick = {() => console.log(itineraryItems[0]["itinerary"])}> Test</button>
     </div>
   );
 }
