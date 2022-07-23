@@ -11,3 +11,17 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.day {
+  background: #4b4b4b;
+  margin: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.list {
+  background: #f4f4f4;
+  margin: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
