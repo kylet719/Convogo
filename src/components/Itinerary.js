@@ -1,8 +1,14 @@
 import React from 'react'
+import ItineraryItem from './ItineraryItem';
 
-export const itinList = () => {
+const itinList = ({dayList}) => {
+  console.log("Testing " + dayList)
   return (
-    <div>itinList</div>
+    <>
+    {dayList.map((day) => (
+      <ItineraryItem date = {day.date} activites = {day.activites}/>
+    ))}
+    </>
   )
 }
 
