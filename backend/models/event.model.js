@@ -6,14 +6,15 @@ const activitySchema = new Schema({
   title: {type: String, required: true},
   location: {type: String},
   time: {type: String},
-  polling: {type: Boolean, required: true},
+  date: {type:String},
+  relateddiscussions: [{type: String}],
 }, {
   timestamps: true
 });
 
 const daySchema = new Schema({
   date: {type: String, required: true},
-  activites: [{type: activitySchema}]
+  activityids: [{type: String}]
 }, {
   timestamps: true
 });
@@ -23,8 +24,8 @@ const eventSchema = new Schema({
   title: {type: String, required: true},
   editors: [{ type: String}],
   itinerary: [daySchema],
-  polls: [String],
-  activites: [{type: activitySchema}],
+  discussion: [String],
+  activities: [{type: activitySchema}],
 }, {
   timestamps: true,
 });

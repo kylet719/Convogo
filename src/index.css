@@ -12,8 +12,22 @@ code {
     monospace;
 }
 
+.container {
+  display: grid;
+  grid-template-columns: 25% 35% 25% 15%;
+}
+
 .day {
   background: #4b4b4b;
+  color:#ffffff;
+  margin: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.activity {
+  background: #4b4b4b;
+  color:#ffffff;
   margin: 5px;
   padding: 10px 20px;
   cursor: pointer;
@@ -24,4 +38,9 @@ code {
   margin: 5px;
   padding: 10px 20px;
   cursor: pointer;
+}
+
+
+.modal {
+  margin-bottom: 20px;
 }
