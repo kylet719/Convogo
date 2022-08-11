@@ -12,16 +12,16 @@ router.route('/add').post((req, res) => {
   const title = req.body.title;
   const editors = req.body.editors;
   const itinerary = req.body.itinerary;
-  const polls = req.body.polls;
-  const activites = req.body.activites
+  const discussion = req.body.discussion;
+  const activities = req.body.activities
 
   const newEvent = new Event({
     owner,
     title,
     editors,
     itinerary,
-    polls,
-    activites,
+    discussion,
+    activities,
   });
 
   newEvent.save()
@@ -39,6 +39,24 @@ router.route('/:id').get((req, res) => {
       .then(() => res.json('Event deleted.'))
       .catch(err => res.status(400).json('Error: ' + err));
   });
+
+  router.route('/update/:id').post((req, res) => {
+    Event.findById(req.params.id)
+      .then(event => {
+        event.owner = req.body.owner;
+        event.title = req.body.title;
+        event.editors = req.body.editors;
+        event.itinerary = req.body.itinerary;
+        event.discussion = req.body.discussion;
+        event.activities = req.body.activities
+  
+        event.save()
+          .then(() => res.json('Event updated!'))
+          .catch(err => res.status(400).json('Error: ' + err));
+      })
+      .catch(err => res.status(400).json('Error: ' + err));
+  });
+
   router.r
 
 module.exports = router;
