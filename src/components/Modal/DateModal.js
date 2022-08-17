@@ -47,7 +47,7 @@ export default function Modal({param}) {
     axios.post('http://localhost:5000/events/update/'+param, updatedEvent)
       .then(res => console.log(res.data));
 
-    window.location = '/';
+    window.location = '/event/'+param;
 
 }
 
