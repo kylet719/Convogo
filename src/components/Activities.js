@@ -1,4 +1,6 @@
 import React from 'react'
+import { useDrag, useDrop } from "react-dnd";
+
 
 const Activity = ({activity}) => {
   return (

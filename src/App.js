@@ -4,10 +4,13 @@ import Activities from "./components/Activities";
 import Modal from "./components/Modal/DateModal";
 import axios from "axios";
 import DatePicker from 'react-datepicker';
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import Event from "./components/Event";
+import Dashboard from "./components/Dashboard";
 
 function App() {
-  const [eventItems, setEventItems] = useState()
-  const [status, setComplete] = useState(false)
+  const [userEvents, setEventItems] = useState()
+  const [finishedLoading, setLoaded] = useState(false)
 
   useEffect( () => {
     const getEvents = async() => {
@@ -21,7 +24,7 @@ function App() {
   const fetchData = async () => {
     const res = await fetch('http://localhost:5000/events')
     const data = await res.json()
-    setComplete(true)
+    setLoaded(true)
     return data
   }
 
@@ -31,63 +34,59 @@ function App() {
     return data
   }
 
-  const deleteDay = (dayString) => {
-    const filteredItinerary = eventItems[0]["itinerary"].filter(item => item.date != dayString)
+  
 
+  const deleteDay = (dayString) => {
+    const filteredItinerary = userEvents[0]["itinerary"].filter(item => item.date != dayString)
     const updatedEvent = {
-      activities: eventItems[0].activities,
-      discussion: eventItems[0].discussion,
-      editors: eventItems[0].editors,
-      owner: eventItems[0].owner,
-      title: eventItems[0].title,
+      activities: userEvents[0].activities,
+      discussion: userEvents[0].discussion,
+      editors: userEvents[0].editors,
+      owner: userEvents[0].owner,
+      title: userEvents[0].title,
       itinerary: filteredItinerary
     };
-
-    axios.post('http://localhost:5000/events/update/'+eventItems[0]["_id"], updatedEvent).then(res => console.log(res.data));
-
-    
-      window.location = '/';
-
-    console.log(eventItems);
+    axios.post('http://localhost:5000/events/update/'+userEvents[0]["_id"], updatedEvent).then(res => console.log(res.data));
+    window.location = '/';
+    console.log(userEvents);
   }
+
+  //#region Drag and Drop
+
+//   const onDrop = (item, monitor, status) => {
+//     const mapping = statuses.find(si => si.status === status);
+
+//     setEventItems(prevState => {
+//         const newItems = prevState
+//             .filter(i => i.id !== item.id)
+//             .concat({ ...item, status, icon: mapping.icon });
+//         return [ ...newItems ];
+//     });
+//   };
+
+// const moveItem = (dragIndex, hoverIndex) => {
+//     const item = userEvents[0]["activities"][dragIndex];
+    
+//     setEventItems(prevState => {
+//         const newItems = prevState.filter((idx) => idx !== dragIndex);
+//         newItems.splice(hoverIndex, 0, item);
+//         return  [ ...newItems ];
+//     });
+//   };
+
+  //#endregion
 
 
   return (
+    <Router>
     <>
-      {status ? 
-      (
-      <div className="container">
-
-      <div className = "Activites">
-        <h1>Activities</h1>
-        <Activities activities = {eventItems[0]["activities"]}/>
-        <button onClick = {() => console.log(eventItems[0]["_id"])}> +</button>
-      </div>
-
-      <div className = "itinerary">
-        <h1>Itinerary</h1>
-        <Itinerary dayList = {eventItems[0]["itinerary"]} deleteFunction = {deleteDay} />
-        <Modal param = {eventItems[0]["_id"]}>
-
-        <DatePicker />
-
-
-        </Modal>
-        
-      </div>
-
-      <div className = "Discussion">
-        <h1>Discussion</h1>
-      </div>
-
-      <div className = "Members">
-        <h1>Members</h1>
-      </div>
-    </div>
-    )
-      :
-      (<h1>LOADING</h1>)}
+    <h1><Link to='/' className = {"titleCard"} style={{ textDecoration: 'none' }}>CONVOGO</Link></h1>
+      <Routes>
+          <Route path = '/' element = {<>{finishedLoading? (<Dashboard userEvents = {userEvents}/>):("Loading")}</>} />
+          <Route path = '/event/:id' element= {<Event/>} />
+        </Routes>
     </>
+    </Router>
     
   );
 }
@@ -99,7 +98,6 @@ export default App;
 // Add pop up for creating a new activity
 // Update activity to auto increment an id for easy retrival 
 // Connect it to the itinerary activity items
-
 // Nav bar
 // Figure out how to implement chat discussion
 // Implement login functionality
