@@ -48,6 +48,7 @@ export default function Modal({param}) {
       .then(res => console.log(res.data));
 
     window.location = '/event/'+param;
+    setEvent(updatedEvent)
 
 }
 
