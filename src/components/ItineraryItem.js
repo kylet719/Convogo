@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useDrop } from "react-dnd";
 
 const ItineraryItem = ({date, activities, deleteFunction, dropFunction, fullActivityList}) => {
-  const[isExpanded, setExpanded] = useState(false)
+  const[isExpanded, setExpanded] = useState(true)
   const getActivityName = (stringId) => {
     const activity =  fullActivityList.filter((item) => item._id === stringId)[0]
     return activity["title"]+ " @ " + activity["time"] 
@@ -12,7 +12,7 @@ const ItineraryItem = ({date, activities, deleteFunction, dropFunction, fullActi
   //#region Drag and drop stuff
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "activity",
-    drop: (activity) => dropAndShow(activity, date),
+    drop: (activity) => dropAndShow(activity),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
@@ -20,7 +20,7 @@ const ItineraryItem = ({date, activities, deleteFunction, dropFunction, fullActi
 
   //Used to automatically show list of activities once dropped
   const dropAndShow = (activity) => {
-    dropFunction(activity.id, date)
+    dropFunction(activity.id, new Date(date).toString())
     setExpanded(true)
   }
   //#endregion
@@ -28,9 +28,8 @@ const ItineraryItem = ({date, activities, deleteFunction, dropFunction, fullActi
   return (
     <div ref = {drop } className = "day" onClick = {()=> setExpanded(!isExpanded)} style = {{border: isOver ? "5px solid yellow": "0px"}}> 
       <h3 className = "dateTitle">
-        {date}
-        <button onClick = {() => deleteFunction(date)}>Delete</button>
-        <button onClick = {() => console.log(activities)}>Log activities variable</button>
+        {new Date(date).toString()}
+        <button onClick = {() => deleteFunction(new Date(date).toString())}>Delete</button>
       </h3>
     
       {isExpanded || isOver ? 

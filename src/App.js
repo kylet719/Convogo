@@ -34,6 +34,7 @@ function App() {
           <Route path = '/' element = {<>{finishedLoading? (<Dashboard userEvents = {userEvents}/>):("Loading")}</>} />
           <Route path = '/event/:id' element= {<Event/>} />
       </Routes>
+      <footer></footer>
     </>
     </Router>
     </DndProvider>
