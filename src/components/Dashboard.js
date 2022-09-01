@@ -6,7 +6,7 @@ const Dashboard = ({userEvents}) => {
     <div>
       <h1>MY EVENTS</h1>
         {userEvents.map((event) => (
-          <div className="day"> 
+          <div className="dayTitle"> 
           <Link className = {"whiteFont"} style={{ textDecoration: 'none' }} to={`/event/${event._id}`}>{event.title}</Link>
           </div>
     ))}

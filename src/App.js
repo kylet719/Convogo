@@ -44,11 +44,13 @@ function App() {
 export default App;
 
 // TODO:
-// Add pop up for date and change to something parsible
 // Add pop up for creating a new activity
-// Update activity to auto increment an id for easy retrival 
-// Connect it to the itinerary activity items
+// Maybe connect the activities to a date through the date id?
 // Nav bar
 // Figure out how to implement chat discussion
 // Implement login functionality
-// Implement drag and drop
+// Implement drag and drop (Fix the ordering system)
+
+// localhost:5000 for database
+// localhost:5001 for socket.io
+// localhost:3000 for web app
