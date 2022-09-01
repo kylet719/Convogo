@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import DatePicker from 'react-datepicker';
 import Activities from "./Activities";
 import Modal from "./Modal/DateModal";
 import ItineraryItem from "./ItineraryItem";
+import Chat from "./Chat";
 
 
 const Event = () => {
@@ -158,7 +158,7 @@ const Event = () => {
         (
         <> 
         <h1>{eventItems["title"]}</h1>
-        <div className="container">
+        <div className="eventview">
             
           <div className = "Activites">
             <h1>Activities</h1>
@@ -184,6 +184,7 @@ const Event = () => {
     
           <div className = "Discussion">
             <h1>Discussion</h1>
+            <Chat />
           </div>
     
           <div className = "Members">
