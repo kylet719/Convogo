@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import Itinerary from "./components/Itinerary";
-import Activities from "./components/Activities";
-import Modal from "./components/Modal/DateModal";
-import axios from "axios";
-import DatePicker from 'react-datepicker';
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import Event from "./components/Event";
+import Dashboard from "./components/Dashboard";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 function App() {
-  const [eventItems, setEventItems] = useState()
-  const [status, setComplete] = useState(false)
+  const [userEvents, setEventItems] = useState()
+  const [finishedLoading, setLoaded] = useState(false)
 
   useEffect( () => {
     const getEvents = async() => {
@@ -21,86 +21,36 @@ function App() {
   const fetchData = async () => {
     const res = await fetch('http://localhost:5000/events')
     const data = await res.json()
-    setComplete(true)
+    setLoaded(true)
     return data
   }
-
-  const fetchEvent = async (id) => {
-    const res = await fetch(`http://localhost:5000/eventss/${id}`)
-    const data = await res.json()
-    return data
-  }
-
-  const deleteDay = (dayString) => {
-    const filteredItinerary = eventItems[0]["itinerary"].filter(item => item.date != dayString)
-
-    const updatedEvent = {
-      activities: eventItems[0].activities,
-      discussion: eventItems[0].discussion,
-      editors: eventItems[0].editors,
-      owner: eventItems[0].owner,
-      title: eventItems[0].title,
-      itinerary: filteredItinerary
-    };
-
-    axios.post('http://localhost:5000/events/update/'+eventItems[0]["_id"], updatedEvent).then(res => console.log(res.data));
-
-    
-      window.location = '/';
-
-    console.log(eventItems);
-  }
-
 
   return (
+    <DndProvider backend={HTML5Backend}>
+    <Router>
     <>
-      {status ? 
-      (
-      <div className="container">
-
-      <div className = "Activites">
-        <h1>Activities</h1>
-        <Activities activities = {eventItems[0]["activities"]}/>
-        <button onClick = {() => console.log(eventItems[0]["_id"])}> +</button>
-      </div>
-
-      <div className = "itinerary">
-        <h1>Itinerary</h1>
-        <Itinerary dayList = {eventItems[0]["itinerary"]} deleteFunction = {deleteDay} />
-        <Modal param = {eventItems[0]["_id"]}>
-
-        <DatePicker />
-
-
-        </Modal>
-        
-      </div>
-
-      <div className = "Discussion">
-        <h1>Discussion</h1>
-      </div>
-
-      <div className = "Members">
-        <h1>Members</h1>
-      </div>
-    </div>
-    )
-      :
-      (<h1>LOADING</h1>)}
+      <h1><Link to='/' className = {"titleCard"} style={{ textDecoration: 'none' }}>CONVOGO</Link></h1>
+      <Routes>
+          <Route path = '/' element = {<>{finishedLoading? (<Dashboard userEvents = {userEvents}/>):("Loading")}</>} />
+          <Route path = '/event/:id' element= {<Event/>} />
+      </Routes>
+      <footer></footer>
     </>
-    
+    </Router>
+    </DndProvider>
   );
 }
 
 export default App;
 
 // TODO:
-// Add pop up for date and change to something parsible
 // Add pop up for creating a new activity
-// Update activity to auto increment an id for easy retrival 
-// Connect it to the itinerary activity items
-
+// Maybe connect the activities to a date through the date id?
 // Nav bar
 // Figure out how to implement chat discussion
 // Implement login functionality
-// Implement drag and drop
+// Implement drag and drop (Fix the ordering system)
+
+// localhost:5000 for database
+// localhost:5001 for socket.io
+// localhost:3000 for web app

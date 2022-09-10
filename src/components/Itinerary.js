@@ -1,15 +1,18 @@
+// this isn't really being used anymore
+
 import React from 'react'
 import ItineraryItem from './ItineraryItem';
+import { useDrop } from 'react-dnd/dist/hooks';
 
-const itinList = ({dayList, deleteFunction}) => {
-  console.log("Testing " + dayList)
+const Itinerary = ({dayList, deleteFunction}) => {
+
   return (
     <>
     {dayList.map((day) => (
-      <ItineraryItem date = {day.date} activites = {day.activites} deleteFunction = {deleteFunction}/>
+      <ItineraryItem date = {day.date} activities = {day.activityids} deleteFunction = {deleteFunction}/>
     ))}
     </>
   )
 }
 
-export default itinList;
+export default Itinerary;

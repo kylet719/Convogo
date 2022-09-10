@@ -2,22 +2,15 @@ import React, { useState, useEffect } from "react";
 import "./Modal.css";
 import axios from 'axios'
 import ReactDatePicker from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.css'
 
-export default function Modal({param}) {
+export default function Modal({param, submitButton}) {
   const [modal, setModal] = useState(false);
-  const [currentEvent, setEvent] = useState('');
   const [newDate, setDate] = useState(new Date());
 
   const toggleModal = () => {
     setModal(!modal);
   };
-
-  // Don't use API call here in the future
-  useEffect( () => {
-    axios.get('http://localhost:5000/events/'+param).then(response => {
-        setEvent(response.data)
-    })
-  }, [])
 
   //#region  Modal stuff dunno what it does
   if(modal) {
@@ -27,28 +20,9 @@ export default function Modal({param}) {
   }
   //#endregion
 
-
   const onSubmit = (e) => {
     e.preventDefault()
-    const newItineraryItem = {
-        date: newDate,
-        activityids: []
-    };
-    const updatedEvent = {
-      activities: currentEvent.activities,
-      discussion: currentEvent.discussion,
-      editors: currentEvent.editors,
-      owner: currentEvent.owner,
-      title: currentEvent.title,
-      itinerary: [...currentEvent.itinerary, newItineraryItem]
-    };
-
-    console.log(updatedEvent);
-    axios.post('http://localhost:5000/events/update/'+param, updatedEvent)
-      .then(res => console.log(res.data));
-
-    window.location = '/';
-
+    submitButton(newDate)
 }
 
 
@@ -68,13 +42,19 @@ export default function Modal({param}) {
 
             <div className="form-group">
                 <label>Date: </label>
-                <input 
+                {/* <input 
                     type="text" 
                     className="form-control"
                     onChange={(e)=> setDate(e.target.value)}
-                    />
-                    <ReactDatePicker />
-                  
+                    /> */}
+                    <ReactDatePicker
+                selected={newDate}
+                onChange={(date)=> setDate(date)}
+              />
+            </div>
+
+            <div>
+              
             </div>
 
             <div className="form-group">

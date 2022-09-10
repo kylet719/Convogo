@@ -12,35 +12,74 @@ code {
     monospace;
 }
 
-.container {
+.eventview {
   display: grid;
   grid-template-columns: 25% 35% 25% 15%;
 }
 
-.day {
-  background: #4b4b4b;
-  color:#ffffff;
-  margin: 5px;
+.dayTitle {
+  background: #D9D9D9;
+  color:#000000;
+  width: 105;
+  margin: 5px 0px;
   padding: 10px 20px;
+  cursor: pointer;
+}
+
+.day {
+  background: #EFEFEF;
+  color:#000000;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.activitiesList {
+  color:#000000;
+  padding: 5px;
   cursor: pointer;
 }
 
 .activity {
-  background: #4b4b4b;
-  color:#ffffff;
-  margin: 5px;
+  background: #D9D9D9;
+  color:#000000;
+  margin: 10px;
   padding: 10px 20px;
   cursor: pointer;
 }
 
-.list {
-  background: #f4f4f4;
-  margin: 5px;
-  padding: 10px 20px;
+.titleCard {
+  color: black;
+  font-size: 50px;
   cursor: pointer;
 }
+
+.whiteFont {
+  color: rgb(0, 0, 0);
+  font-size: 25px;
+}
+
 
 
 .modal {
   margin-bottom: 20px;
+}
+
+.highlight-region {
+  background-color: yellow;
+}
+
+.members {
+  background: #D9D9D9;
+  color:#000000;
+  margin: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.chat {
+  background: #D9D9D9;
+  color:#000000;
+  margin: 10px;
+  height: 500px;
+  cursor: pointer;
 }

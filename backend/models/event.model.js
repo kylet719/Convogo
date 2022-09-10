@@ -6,14 +6,14 @@ const activitySchema = new Schema({
   title: {type: String, required: true},
   location: {type: String},
   time: {type: String},
-  date: {type:String},
+  date: {type: Date},
   relateddiscussions: [{type: String}],
 }, {
   timestamps: true
 });
 
 const daySchema = new Schema({
-  date: {type: String, required: true},
+  date: {type: Date, required: true},
   activityids: [{type: String}]
 }, {
   timestamps: true
