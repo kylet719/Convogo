@@ -30,7 +30,7 @@ app.listen(port, () => {
 });
 
 
-// Socket.io stuff
+//Socket.io stuff
 const http = require('http');
 const {Server} = require("socket.io");
 const server = http.createServer(app);
@@ -46,7 +46,7 @@ io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`)
 
   socket.on("send_message", (data) => {
-    // console.log(data)
+    console.log(data)
     socket.broadcast.emit("received_message", data)
   })
 
@@ -55,4 +55,5 @@ io.on("connection", (socket) => {
 server.listen(5001, () => {
   console.log('listening on *:5001');
 });
+
 
