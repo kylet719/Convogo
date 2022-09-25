@@ -7,22 +7,24 @@ import ActivityAdd from "./Modal/ActivityModal";
 import ItineraryItem from "./ItineraryItem";
 import Chat from "./Chat";
 import Activity from "./Activities";
+import { io } from 'socket.io-client'
 
+const socket = io.connect("http://localhost:5001")
 
 const Event = () => {
     const [eventItems, setEventItems] = useState("")
     const [status, setComplete] = useState(false)
     const params = useParams()
+    //TEMPORARY UNTIL WE GET ACCOUNTS GOING
+    const [username, setUsername] = useState("")
   
     //#region database calls
     useEffect( () => {
       const getEvents = async() => {
         const taskFromServer = await fetchEvent()
         setEventItems(taskFromServer)
-        
       }
       getEvents()
-      
     }, [])
   
     const fetchEvent = async (id) => {
@@ -184,14 +186,11 @@ const Event = () => {
 
     // Can probably move back into the DateModal
     const dateModalSubmit = (newDate) => {
-      console.log(new Date(newDate))
-      console.log(Date.parse(newDate))
       const newItineraryItem = {
         date: new Date(newDate.toString()),
         activityids: []
       };
       const newItinerary = addToItinerary(eventItems.itinerary, newItineraryItem);
-
       const updatedEvent = {
         activities: eventItems.activities,
         discussion: eventItems.discussion,
@@ -200,9 +199,6 @@ const Event = () => {
         title: eventItems.title,
         itinerary: newItinerary,
       };
-
-      console.log(updatedEvent)
-
       axios.post('http://localhost:5000/events/update/'+params.id, updatedEvent).then(res => console.log(res.data));
       setEventItems(updatedEvent)
       window.location = '/event/'+params.id;
@@ -236,8 +232,32 @@ const Event = () => {
 
     const refresh = () => {
     }
-  
-  
+
+    const addNewDiscussion = (activityIdToLinkTo, activityNameToLinkTo) => {
+      console.log(activityIdToLinkTo + " and " + activityNameToLinkTo)
+      const newChatLog = {
+        messages: [],
+        activityid: activityIdToLinkTo,
+        activityname: activityNameToLinkTo
+      }
+
+      console.log(newChatLog);
+      axios.post('http://localhost:5000/chats/add', newChatLog).then(res => {
+        eventItems["discussion"].push(res.data);
+        axios.post('http://localhost:5000/events/update/'+params.id, eventItems).then(res => console.log(res.data));
+        setEventItems(eventItems);
+        window.location = '/event/'+params.id;
+      });
+    }
+
+    const deleteDiscussion = (discussionId) => {
+      axios.delete(`http://localhost:5000/chats/${discussionId}`).then(res => console.log(res.data));
+      eventItems["discussion"] = eventItems["discussion"].filter(item => item != discussionId);
+      axios.post('http://localhost:5000/events/update/'+params.id, eventItems).then(res => console.log(res.data));
+      setEventItems(eventItems);
+      window.location = '/event/'+params.id;
+    }
+
     return (
       <>
         {status ? 
@@ -251,9 +271,11 @@ const Event = () => {
             <Activities activities = {eventItems["activities"]} 
                                       moveItem={moveItem} 
                                       deleteFunction ={deleteActivity}  
-                                      refresh ={refresh}/>
+                                      refresh ={refresh}
+                                      startDiscussion = {addNewDiscussion}/>
             <ActivityAdd param = {eventItems["_id"]} submitButton = {activityModalSubmit}/>
-            <button onClick = {() => console.log(eventItems)}>LOGGER</button>
+            <button onClick = {() => console.log(eventItems)}>Log Current Event</button>
+            <button onClick = {() => console.log(eventItems["discussion"])}>Test</button>
           </div>
     
           <div className = "itinerary">
@@ -274,7 +296,17 @@ const Event = () => {
     
           <div className = "Discussion">
             <h1>Discussion</h1>
-            <Chat />
+            <input placeholder ="Enter user"type ="text" value = {username} onChange = {(event) => setUsername(event.target.value)}></input>
+            <>
+            {eventItems["discussion"].map((discussionId) => (
+              <div > 
+                <Chat discussionId = {discussionId} socket = {socket} username = {username} deleteDiscussion={deleteDiscussion}/>
+              </div>
+            ))}
+            </>
+            
+            
+            <button onClick = {() => addNewDiscussion()}>Add button</button>
           </div>
     
           <div className = "Members">
