@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./Modal.css";
-import axios from 'axios'
 import ReactDatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
 
-export default function Modal({param, submitButton}) {
+export default function Modal({submitButton}) {
   const [modal, setModal] = useState(false);
   const [newDate, setDate] = useState(new Date());
 
-  const toggleModal = () => {
-    setModal(!modal);
-  };
+  const toggleModal = () => {setModal(!modal);};
 
   //#region  Modal stuff dunno what it does
   if(modal) {
@@ -28,10 +25,7 @@ export default function Modal({param, submitButton}) {
 
   return (
     <>
-      <button onClick={toggleModal} className="btn-modal">
-        +
-      </button>
-
+      <button onClick={toggleModal} className="btn-modal">+</button>
       {modal && (
         <div className="modal">
           <div onClick={toggleModal} className="overlay"></div>
@@ -42,11 +36,6 @@ export default function Modal({param, submitButton}) {
 
             <div className="form-group">
                 <label>Date: </label>
-                {/* <input 
-                    type="text" 
-                    className="form-control"
-                    onChange={(e)=> setDate(e.target.value)}
-                    /> */}
                     <ReactDatePicker
                 selected={newDate}
                 onChange={(date)=> setDate(date)}
