@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import Activities from "./Activities";
-import Modal from "./Modal/DateModal";
+import DateAdd from "./Modal/DateModal";
+import ActivityAdd from "./Modal/ActivityModal";
 import ItineraryItem from "./ItineraryItem";
 import Chat from "./Chat";
+import Activity from "./Activities";
 
 
 const Event = () => {
@@ -50,6 +52,60 @@ const Event = () => {
       console.log(updatedEvent)
       axios.post('http://localhost:5000/events/update/'+params.id, updatedEvent).then(res => console.log(res.data));
       window.location = '/event/'+params.id;
+    }
+
+  
+
+    const deleteActivity = (activity, index) => {
+      console.log(activity);
+      console.log(index);
+      const date = eventItems["activities"][index].date;
+      console.log("activity date: " + date);
+      var flag = (date != null);
+      var newItinerary;
+      if (flag) {
+        // Removes linkage between a deleted day and its activities
+        const indexOfDeleteDay = eventItems["itinerary"].findIndex(item => item.date === date)
+        const test = eventItems["itinerary"].forEach(item => console.log("itinieray dates: " + item.date))
+
+        console.log(eventItems)
+        console.log("INDES" + indexOfDeleteDay)
+      
+        
+        
+        const filteredActivities = eventItems["itinerary"][indexOfDeleteDay]["activityids"].filter(item => item != activity)
+
+        const day = eventItems["itinerary"][indexOfDeleteDay];
+        const updatedday = {
+          date: day.date,
+          activityids: filteredActivities,
+        }
+        console.log(updatedday);
+
+        // filter out the old day
+        const filteredItinerary = eventItems["itinerary"].filter((item, index) => index !== indexOfDeleteDay);
+        console.log(filteredItinerary);
+
+        newItinerary = addToItinerary(filteredItinerary, updatedday);
+      
+        console.log(newItinerary);
+
+     }
+      
+      console.log("delete" + activity)
+      const filteredActivities = eventItems["activities"].filter(item => item._id !== activity)
+      const updatedEvent = {
+        activities: filteredActivities,
+        discussion: eventItems.discussion,
+        editors: eventItems.editors,
+        owner: eventItems.owner,
+        title: eventItems.title,
+        itinerary: flag ? newItinerary : eventItems.itinerary
+      };
+      console.log(updatedEvent)
+      axios.post('http://localhost:5000/events/update/'+params.id, updatedEvent).then(res => console.log(res.data));
+      window.location = '/event/'+params.id;
+
     }
   
     //#endregion
@@ -112,6 +168,20 @@ const Event = () => {
   };
   //#endregion
 
+    function addToItinerary(itinerary, day) {
+      if (itinerary == 0) {
+        eventItems.itinerary.push(day)
+      } else {
+        for (var i = 0; i < itinerary.length; i++) {
+          if (new Date(day.date.toString()) - new Date(itinerary[i]["date"]) < 0 ) {
+            break;
+          }
+        }
+        itinerary.splice(i, 0, day)
+      }
+      return itinerary;
+    }
+
     // Can probably move back into the DateModal
     const dateModalSubmit = (newDate) => {
       console.log(new Date(newDate))
@@ -120,18 +190,33 @@ const Event = () => {
         date: new Date(newDate.toString()),
         activityids: []
       };
-      if (eventItems.itinerary.length == 0) {
-        eventItems.itinerary.push(newItineraryItem)
-      } else {
-        for (var i = 0; i < eventItems.itinerary.length; i++) {
-          if (new Date(newDate.toString()) - new Date(eventItems.itinerary[i]["date"]) < 0 ) {
-            break;
-          }
-        }
-        eventItems.itinerary.splice(i, 0, newItineraryItem)
-      }
+      const newItinerary = addToItinerary(eventItems.itinerary, newItineraryItem);
+
+      const updatedEvent = {
+        activities: eventItems.activities,
+        discussion: eventItems.discussion,
+        editors: eventItems.editors,
+        owner: eventItems.owner,
+        title: eventItems.title,
+        itinerary: newItinerary,
+      };
+
+      console.log(updatedEvent)
+
+      axios.post('http://localhost:5000/events/update/'+params.id, updatedEvent).then(res => console.log(res.data));
+      setEventItems(updatedEvent)
+      window.location = '/event/'+params.id;
+    }
+
+    // Can probably move back into the ActivityModal
+    const activityModalSubmit = (activity) => {
+      console.log(activity)
+      console.log(Date.parse(activity.date))
       
 
+      eventItems.activities.push(activity);
+
+      
       const updatedEvent = {
         activities: eventItems.activities,
         discussion: eventItems.discussion,
@@ -146,7 +231,8 @@ const Event = () => {
       axios.post('http://localhost:5000/events/update/'+params.id, updatedEvent).then(res => console.log(res.data));
       setEventItems(updatedEvent)
       window.location = '/event/'+params.id;
-    }
+
+    }    
 
     const refresh = () => {
     }
@@ -162,7 +248,11 @@ const Event = () => {
             
           <div className = "Activites">
             <h1>Activities</h1>
-            <Activities activities = {eventItems["activities"]} moveItem={moveItem} refresh ={refresh}/>
+            <Activities activities = {eventItems["activities"]} 
+                                      moveItem={moveItem} 
+                                      deleteFunction ={deleteActivity}  
+                                      refresh ={refresh}/>
+            <ActivityAdd param = {eventItems["_id"]} submitButton = {activityModalSubmit}/>
             <button onClick = {() => console.log(eventItems)}>LOGGER</button>
           </div>
     
@@ -179,7 +269,7 @@ const Event = () => {
               </div>
             ))}
             </>
-            <Modal param = {eventItems["_id"]} submitButton = {dateModalSubmit}/>
+            <DateAdd param = {eventItems["_id"]} submitButton = {dateModalSubmit}/>
           </div>
     
           <div className = "Discussion">
