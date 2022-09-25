@@ -65,8 +65,8 @@ const Event = () => {
       var newItinerary;
       if (flag) {
         // Removes linkage between a deleted day and its activities
-        const indexOfDeleteDay = eventItems["itinerary"].findIndex(item => item.date === date)
-        const test = eventItems["itinerary"].forEach(item => console.log("itinieray dates: " + item.date))
+        const indexOfDeleteDay = eventItems["itinerary"].findIndex(item => new Date(item.date).toString() == new Date(date).toString())
+        const test = eventItems["itinerary"].forEach(item => console.log("itinieray dates: " + new Date(item.date).toString()))
 
         console.log(eventItems)
         console.log("INDES" + indexOfDeleteDay)
