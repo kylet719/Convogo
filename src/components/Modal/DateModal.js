@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Modal.css";
-import axios from 'axios'
 import ReactDatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
-
 export default function Modal({param, submitButton}) {
     const [modal, setModal] = useState(false);
     const [newDate, setDate] = useState(new Date());
@@ -34,10 +32,10 @@ export default function Modal({param, submitButton}) {
                         </div>
                     </div>
                 </div>
+
             </form>
         </div>
     );
   }
-
   //https://reactdatepicker.com/
 

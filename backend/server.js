@@ -21,9 +21,11 @@ connection.once('open', () => {
 
 const eventRouter = require('./routes/events');
 const usersRouter = require('./routes/users');
+const chatRouter = require('./routes/chats');
 
 app.use('/events', eventRouter);
 app.use('/users', usersRouter);
+app.use('/chats', chatRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
@@ -45,10 +47,19 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`)
 
+  socket.on("join_room", (data) => {
+    socket.join(data);
+    console.log(`User with ID: ${socket.id} joined room: ${data}`);
+  });
+
   socket.on("send_message", (data) => {
-    console.log(data)
+    console.log("Emitting " + data + " to " + data.chatroom)
     socket.broadcast.emit("received_message", data)
-  })
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User Disconnected", socket.id);
+  });
 
 })
 

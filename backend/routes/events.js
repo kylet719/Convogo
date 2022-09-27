@@ -34,6 +34,7 @@ router.route('/:id').get((req, res) => {
       .then(event => res.json(event))
       .catch(err => res.status(400).json('Error: ' + err));
   });
+
   router.route('/:id').delete((req, res) => {
     Event.findByIdAndDelete(req.params.id)
       .then(() => res.json('Event deleted.'))
@@ -57,6 +58,5 @@ router.route('/:id').get((req, res) => {
       .catch(err => res.status(400).json('Error: ' + err));
   });
 
-  router.r
 
 module.exports = router;
