@@ -29,7 +29,7 @@ function App() {
     <DndProvider backend={HTML5Backend}>
     <Router>
     <>
-      <h1><Link to='/' className = {"titleCard"} style={{ textDecoration: 'none' }}>CONVOGO</Link></h1>
+      <h1 className="text-3xl font-bold"><Link to='/' className = {"titleCard"} style={{ textDecoration: 'none' }}>CONVOGO</Link></h1>
       <Routes>
           <Route path = '/' element = {<>{finishedLoading? (<Dashboard userEvents = {userEvents}/>):("Loading")}</>} />
           <Route path = '/event/:id' element= {<Event/>} />

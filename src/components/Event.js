@@ -253,7 +253,7 @@ const Event = () => {
                                       deleteFunction ={deleteActivity}  
                                       refresh ={refresh}/>
             <ActivityAdd param = {eventItems["_id"]} submitButton = {activityModalSubmit}/>
-            <button onClick = {() => console.log(eventItems)}>LOGGER</button>
+            <button className="btn" onClick = {() => console.log(eventItems)}>LOGGER</button>
           </div>
     
           <div className = "itinerary">

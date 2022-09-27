@@ -51,60 +51,66 @@ const handleInputChange = (e) => {
 
   return (
     <>
-      <button onClick={toggleModal} className="btn-modal">
-        +
-      </button>
+      <label htmlFor="my-modal-6" className="btn modal-button">Add Activity</label>
 
-      {modal && (
-        <div className="modal">
-          <div onClick={toggleModal} className="overlay"></div>
-          <div className="modal-content">
-            <h2>Add Activity</h2>
+      <input type="checkbox" id="my-modal-6" className="modal-toggle" />
+      <div className="modal modal-bottom modal-middle">
+        <div className="modal-box w-72 h-96">
+        <form onSubmit={onSubmit}>  
 
-            <form onSubmit={onSubmit}>  
+          <div className="">
 
-            <div className="form-group">
+            {/* title */}
+            <label className="label">
+              <span className="label-text">Title: </span>
+           </label>             
+            <input 
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              value={activity.title}
+              onChange={handleInputChange} 
+              name="title" 
+              label="Title" 
+              />
 
-              {/* title */}
-              <label className="form-brk">Title: </label>              
-              <input 
-                value={activity.title}
-                onChange={handleInputChange} 
-                name="title" 
-                label="Title" 
-                />
+            {/* location */}
+            <label className="label">
+              <span className="label-text">Location: </span>
+           </label>  
+            <input 
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              value={activity.location}
+              onChange={handleInputChange} 
+              name="location" 
+              label="Location" 
+              />
 
-              {/* location */}
-              <label className="form-brk">Location: </label>
-              <input 
-                value={activity.location}
-                onChange={handleInputChange} 
-                name="location" 
-                label="Location" 
-                />
+            {/* time */}
+            <label className="label">
+              <span className="label-text">Time: </span>
+           </label> 
+            <input
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              value={activity.time}
+              onChange={handleInputChange} 
+              name="time" 
+              label="Time" 
+              />                                               
 
-              {/* time */}
-              <label className="form-brk">Time: </label>
-              <input 
-                value={activity.time}
-                onChange={handleInputChange} 
-                name="time" 
-                label="Time" 
-                />                                               
+          </div>
+          <div className="modal-action absolute bottom-0 right-0 m-3">
+            <input type="submit" value="Add" className="btn btn-primary" />
+            <label htmlFor="my-modal-6" className="btn">Close</label>
+          </div>
 
-            </div>
 
-            <div className="form-group">
-                <input type="submit" value="Add" className="btn btn-primary" />
-            </div>
-            </form>
+          </form>
 
-            <button className="close-modal" onClick={toggleModal}>
-              CLOSE
-            </button>
           </div>
         </div>
-      )}
+   
     </>
   );
 }
