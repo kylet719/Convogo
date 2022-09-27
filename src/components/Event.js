@@ -274,8 +274,8 @@ const Event = () => {
                                       refresh ={refresh}
                                       startDiscussion = {addNewDiscussion}/>
             <ActivityAdd param = {eventItems["_id"]} submitButton = {activityModalSubmit}/>
-            <button onClick = {() => console.log(eventItems)}>Log Current Event</button>
-            <button onClick = {() => console.log(eventItems["discussion"])}>Test</button>
+            <button className="btn" onClick = {() => console.log(eventItems)}>Log Current Event</button>
+            <button className="btn" onClick = {() => console.log(eventItems["discussion"])}>Test</button>
           </div>
     
           <div className = "itinerary">

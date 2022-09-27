@@ -29,7 +29,7 @@ const ItineraryItem = ({date, activities, deleteFunction, dropFunction, fullActi
     <div ref = {drop } className = "day" onClick = {()=> setExpanded(!isExpanded)} style = {{border: isOver ? "5px solid yellow": "0px"}}> 
       <h3 className = "dayTitle">
         {new Date(date).toString().substring(0,15)}
-        <button onClick = {() => deleteFunction(new Date(date).toString())}>Delete</button>
+        <button className='btn btn-xs btn-outline btn-error float-right' onClick = {() => deleteFunction(new Date(date).toString())}>Delete</button>
       </h3>
     
       { (isExpanded || isOver) && activities.length >0? 
