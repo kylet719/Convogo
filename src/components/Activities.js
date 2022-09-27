@@ -50,8 +50,9 @@ drag(drop(ref));
     <div className = "activity" 
          ref = {ref}
          style = {{border: isDragging ? "5px solid yellow": "0px"}}>
-        <h3>{activity.title} @ {activity.time}</h3>
-        <button onClick = {() => deleteFunction(activity._id, index)}>Delete</button>        
+        <h3>{activity.title} @ {activity.time}
+        <button className='btn btn-xs btn-outline btn-error float-right' onClick = {() => deleteFunction(activity._id, index)}>Delete</button>        
+        </h3>
         <h4>{activity.date != null? (new Date(activity.date).toString()):("None")}</h4>
     </div>
   )
