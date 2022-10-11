@@ -3,13 +3,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    minlength: 3
-  },
+  oEventsInProgress: [String],
+  oEventsDone: [String],
+  pEventsInProgress: [String],
+  pEventsDone: [String],
+  name: String,
+  googleId: String
 }, {
   timestamps: true,
 });
