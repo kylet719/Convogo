@@ -10,6 +10,7 @@ import Activity from "./Activities";
 import { io } from 'socket.io-client'
 import Nav from "./nav";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
 const socket = io.connect("http://localhost:5001")
 
@@ -19,14 +20,21 @@ const Event = () => {
   const params = useParams()
   //TEMPORARY UNTIL WE GET ACCOUNTS GOING
   const [username, setUsername] = useState("")
+  const [userObject, setUserObject] = useState()
 
   //#region database calls
   useEffect(() => {
+    const obj = jwtDecode(localStorage.getItem("user"));
+    setUserObject(obj);
+
     const getEvents = async () => {
       const taskFromServer = await fetchEvent()
       setEventItems(taskFromServer)
     }
     getEvents()
+
+    
+
   }, [])
 
   const fetchEvent = async (id) => {
@@ -273,7 +281,8 @@ const Event = () => {
 
                 <div className="navbar bg-base-100">
                   <div className="flex-none">
-                    <a href='/' className="btn btn-ghost normal-case text-xl">Convogo</a>
+                    {/* <a href='/' className="btn btn-ghost normal-case text-xl">Convogo</a> */}
+                    <button onClick = {() => window.location = '/'} className="btn btn-ghost normal-case text-xl">Convogo</button>
                   </div>
                   <div className="flex-1">
                     <button className="btn btn-square btn-ghost">
@@ -300,7 +309,7 @@ const Event = () => {
                     <h1 className="title left absolute">{eventItems["title"]}</h1>
                     <div className="absolute bottom-0 left-0">
                       <button className="btn" onClick={() => console.log(eventItems)}>Log Current Event</button>
-                      <button className="btn" onClick={() => console.log(eventItems["discussion"])}>Test</button>
+                      <button className="btn" onClick={() => console.log(userObject)}>Test</button>
                     </div>
                   </div>
 
@@ -361,7 +370,8 @@ const Event = () => {
                 <label htmlFor="my-drawer" className="drawer-overlay"></label>
                 <ul className="menu p-4 overflow-y-auto w-min bg-base-100 text-base-content">
                   {/* <!-- Sidebar content here --> */}
-                  <li><a>Sidebar Item 1</a></li>
+                  <li><img src={userObject["picture"]} alt="Profile Pic" /></li>
+                  <li><a>{userObject["name"]}</a></li>
                   <li><a>Sidebar Item 2</a></li>
                 </ul>
               </div>
