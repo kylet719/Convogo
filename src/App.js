@@ -4,12 +4,45 @@ import Event from "./components/Event";
 import Dashboard from "./components/Dashboard";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import jwtDecode from "jwt-decode";
+import Login from "./components/Login";
+import UserProfile from "./components/UserProfile";
 
 function App() {
   const [userEvents, setEventItems] = useState()
   const [finishedLoading, setLoaded] = useState(false)
+  const [loggedIn, setLogIn] = useState(UserProfile.getLogStatus)
+
+  const handleCallbackResponse = (response) => {
+    console.log("Encoded JWT ID token: " + response.credential);
+    const obj = jwtDecode(response.credential);
+    console.log(obj);
+    localStorage.setItem('user', response.credential);
+    setLogIn(true);
+  }
 
   useEffect(() => {
+    /*global google*/
+    const jwt = localStorage.getItem("user");
+    if (!jwt) {
+
+    
+    google.accounts.id.initialize({
+      client_id: "950362977131-f9spgsmvsbpelq3mrf3mp7um6ejbfgc9.apps.googleusercontent.com",
+      callback: handleCallbackResponse
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById("signInDiv"),
+      {theme: "outline", size: "large"}
+    );
+
+    }
+    else {
+      setLogIn(true);
+    }
+    
+
     const getEvents = async () => {
       const taskFromServer = await fetchData()
       setEventItems(taskFromServer)
@@ -25,13 +58,21 @@ function App() {
     return data
   }
 
+  const handleSignOut = () => {
+    console.log("remove")
+    localStorage.removeItem("user");
+    window.location = '/';
+
+  }
+
   return (
     <DndProvider backend={HTML5Backend}>
       <Router>
         <div className="">
           <h1 className="text-3xl font-bold"><Link to='/' className={"titleCard"} style={{ textDecoration: 'none' }}>CONVOGO</Link></h1>
+          {/* <div id="signInDiv"></div> */}
           <Routes>
-            <Route path='/' element={<>{finishedLoading ? (<Dashboard userEvents={userEvents} />) : ("Loading")}</>} />
+            <Route path='/' element={<>{ loggedIn ? (finishedLoading ? (<Dashboard userEvents={userEvents} signout = {handleSignOut} />) : ("Loading")): (<Login/>) }</>} />
             <Route path='/event/:id' element={<Event />} />
           </Routes>
           <footer></footer>
