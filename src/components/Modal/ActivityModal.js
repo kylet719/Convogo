@@ -14,7 +14,7 @@ const newActivity = {
 
 // GET INPUTS TO POPULATE NEW ACTVITY
 
-export default function Modal({param, submitButton}) {
+export default function Modal({ param, submitButton }) {
   const [modal, setModal] = useState(false);
   const [newTitle, setTitle] = useState("");
   const [newLocation, setLocation] = useState("");
@@ -28,7 +28,7 @@ export default function Modal({param, submitButton}) {
   };
 
   //#region  Modal stuff dunno what it does
-  if(modal) {
+  if (modal) {
     document.body.classList.add('active-modal')
   } else {
     document.body.classList.remove('active-modal')
@@ -38,79 +38,81 @@ export default function Modal({param, submitButton}) {
   const onSubmit = (e) => {
     e.preventDefault()
     submitButton(activity)
-}
+  }
 
-const handleInputChange = (e) => {
-  const { name, value } = e.target;
-  setActivity({
-    ...activity,
-    [name]: value,
-  });
-};
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setActivity({
+      ...activity,
+      [name]: value,
+    });
+  };
 
 
   return (
-    <>
-      <label htmlFor="my-modal-6" className="btn modal-button">Add Activity</label>
+    <div className="">
+      <div id="wrap">
+        <label htmlFor="my-modal-6" id="plus" className="icon btn btn-circle btn-secondary btn-outline modal-button"></label>
+      </div>
 
       <input type="checkbox" id="my-modal-6" className="modal-toggle" />
       <div className="modal modal-bottom modal-middle">
         <div className="modal-box w-72 h-96">
-        <form onSubmit={onSubmit}>  
+          <form onSubmit={onSubmit}>
 
-          <div className="">
+            <div className="">
 
-            {/* title */}
-            <label className="label">
-              <span className="label-text">Title: </span>
-           </label>             
-            <input 
-              type="text"
-              className="input input-bordered w-full max-w-xs"
-              value={activity.title}
-              onChange={handleInputChange} 
-              name="title" 
-              label="Title" 
+              {/* title */}
+              <label className="label">
+                <span className="label-text">Title: </span>
+              </label>
+              <input
+                type="text"
+                className="input input-bordered w-full max-w-xs"
+                value={activity.title}
+                onChange={handleInputChange}
+                name="title"
+                label="Title"
               />
 
-            {/* location */}
-            <label className="label">
-              <span className="label-text">Location: </span>
-           </label>  
-            <input 
-              type="text"
-              className="input input-bordered w-full max-w-xs"
-              value={activity.location}
-              onChange={handleInputChange} 
-              name="location" 
-              label="Location" 
+              {/* location */}
+              <label className="label">
+                <span className="label-text">Location: </span>
+              </label>
+              <input
+                type="text"
+                className="input input-bordered w-full max-w-xs"
+                value={activity.location}
+                onChange={handleInputChange}
+                name="location"
+                label="Location"
               />
 
-            {/* time */}
-            <label className="label">
-              <span className="label-text">Time: </span>
-           </label> 
-            <input
-              type="text"
-              className="input input-bordered w-full max-w-xs"
-              value={activity.time}
-              onChange={handleInputChange} 
-              name="time" 
-              label="Time" 
-              />                                               
+              {/* time */}
+              <label className="label">
+                <span className="label-text">Time: </span>
+              </label>
+              <input
+                type="text"
+                className="input input-bordered w-full max-w-xs"
+                value={activity.time}
+                onChange={handleInputChange}
+                name="time"
+                label="Time"
+              />
 
-          </div>
-          <div className="modal-action absolute bottom-0 right-0 m-3">
-            <input type="submit" value="Add" className="btn btn-primary" />
-            <label htmlFor="my-modal-6" className="btn">Close</label>
-          </div>
+            </div>
+            <div className="modal-action absolute bottom-0 right-0 m-3">
+              <input type="submit" value="Add" className="btn btn-primary" />
+              <label htmlFor="my-modal-6" className="btn">Close</label>
+            </div>
 
 
           </form>
 
-          </div>
         </div>
-   
-    </>
+      </div>
+
+    </div>
   );
 }

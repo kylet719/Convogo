@@ -9,6 +9,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-y: hidden; /* Hide vertical scrollbar */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
 }
 
 code {
@@ -16,9 +18,46 @@ code {
     monospace;
 }
 
+.vertical-line {
+  border-left: solid black;
+  margin-right: 10px;
+
+}
+
 .eventview {
   display: grid;
-  grid-template-columns: 25% 35% 25% 15%;
+  grid-template-columns:10% 25% 25% 25% 15%;
+}
+
+.container {
+  margin:5vh auto;
+}
+
+.left {
+  white-space: nowrap;
+  transform-origin: top left;
+  left:0;
+  top: 0;
+  transform: rotate(-90deg) translateX(-100%);
+}
+
+.title {
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 64px;
+
+  color: #000000;
+
+  
+}
+
+.heading {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 39px;
 }
 
 .dayTitle {
@@ -52,6 +91,7 @@ code {
 }
 
 .titleCard {
+  display: none;
   color: black;
   font-size: 50px;
   cursor: pointer;
@@ -67,8 +107,29 @@ code {
   z-index: 5;
 }
 
+#wrap {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+.icon:before {
+  content: '';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 30px;
+}
+
+#plus:before {
+  content: '\FF0B';
+}
+
+
 .highlight-region {
-  background-color: yellow;
+  background-color: #FBBD23;
 }
 
 .members {

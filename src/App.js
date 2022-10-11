@@ -9,8 +9,8 @@ function App() {
   const [userEvents, setEventItems] = useState()
   const [finishedLoading, setLoaded] = useState(false)
 
-  useEffect( () => {
-    const getEvents = async() => {
+  useEffect(() => {
+    const getEvents = async () => {
       const taskFromServer = await fetchData()
       setEventItems(taskFromServer)
     }
@@ -27,16 +27,16 @@ function App() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-    <Router>
-    <>
-      <h1 className="text-3xl font-bold"><Link to='/' className = {"titleCard"} style={{ textDecoration: 'none' }}>CONVOGO</Link></h1>
-      <Routes>
-          <Route path = '/' element = {<>{finishedLoading? (<Dashboard userEvents = {userEvents}/>):("Loading")}</>} />
-          <Route path = '/event/:id' element= {<Event/>} />
-      </Routes>
-      <footer></footer>
-    </>
-    </Router>
+      <Router>
+        <div className="">
+          <h1 className="text-3xl font-bold"><Link to='/' className={"titleCard"} style={{ textDecoration: 'none' }}>CONVOGO</Link></h1>
+          <Routes>
+            <Route path='/' element={<>{finishedLoading ? (<Dashboard userEvents={userEvents} />) : ("Loading")}</>} />
+            <Route path='/event/:id' element={<Event />} />
+          </Routes>
+          <footer></footer>
+        </div>
+      </Router>
     </DndProvider>
   );
 }

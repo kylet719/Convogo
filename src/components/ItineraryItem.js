@@ -1,13 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
 import { useDrop } from "react-dnd";
+import ItineraryActicity from './ItinieraryActivity';
+import ItineraryActivity from './ItinieraryActivity';
 
-const ItineraryItem = ({date, activities, deleteFunction, dropFunction, fullActivityList}) => {
-  const[isExpanded, setExpanded] = useState( activities.length >0)
-  const getActivityName = (stringId) => {
-    const activity =  fullActivityList.filter((item) => item._id === stringId)[0]
-    return activity["title"]+ " @ " + activity["time"] 
-  }
+const ItineraryItem = ({ index, date, activities, deleteFunction, dropFunction, fullActivityList, removeActivity }) => {
+  const [isExpanded, setExpanded] = useState(activities.length > 0)
+
+
 
   //#region Drag and drop stuff
   const [{ isOver }, drop] = useDrop(() => ({
@@ -26,26 +26,26 @@ const ItineraryItem = ({date, activities, deleteFunction, dropFunction, fullActi
   //#endregion
 
   return (
-    <div ref = {drop } className = "day" onClick = {()=> setExpanded(!isExpanded)} style = {{border: isOver ? "5px solid yellow": "0px"}}> 
-      <h3 className = "dayTitle">
-        {new Date(date).toString().substring(0,15)}
-        <button className='btn btn-xs btn-outline btn-error float-right' onClick = {() => deleteFunction(new Date(date).toString())}>Delete</button>
+    <div ref={drop} className="day" onClick={() => setExpanded(!isExpanded)} style={{ border: isOver ? "5px solid yellow" : "0px" }}>
+      <h3 className="dayTitle">
+        {new Date(date).toString().substring(0, 15)}
+        <button className='btn btn-xs btn-outline btn-error float-right' onClick={() => deleteFunction(new Date(date).toString())}>Delete</button>
       </h3>
-    
-      { (isExpanded || isOver) && activities.length >0? 
-      (
-      <div className = {isExpanded ? "activitiesList" : ""}>
-      <ul>
-          {activities.map((item) => (
-            <li > 
-              {getActivityName(item)}
-            </li>
-          ))}
-      </ul>
-      </div>
-      ) 
-      : 
-      ("")
+
+      {(isExpanded || isOver) && activities.length > 0 ?
+        (
+          <div className={isExpanded ? "activitiesList" : ""}>
+            <ul>
+              {activities.map((item) => (
+                <li >
+                  <ItineraryActicity index={index} activities={fullActivityList} id={item} remove={removeActivity}></ItineraryActicity>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+        :
+        ("")
       }
 
     </div>

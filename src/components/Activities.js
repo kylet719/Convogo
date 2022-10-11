@@ -53,7 +53,7 @@ drag(drop(ref));
         <h3>{activity.title} @ {activity.time}
         <button className='btn btn-xs btn-outline btn-error float-right' onClick = {() => deleteFunction(activity._id, index)}>Delete</button>        
         </h3>
-        <button onClick = {() => startDiscussion(activity._id, activity.title)}>Start Discussion</button>             
+        <button className='btn my-1 btn-xs btn-outline btn-accent float-right' onClick = {() => startDiscussion(activity._id, activity.title)}>Discussion</button>             
         <h4>{activity.date != null? (new Date(activity.date).toString()):("None")}</h4>
     </div>
   )
