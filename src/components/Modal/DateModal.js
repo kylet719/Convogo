@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Modal.css";
 import ReactDatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
+
 export default function Modal({ param, submitButton }) {
   const [modal, setModal] = useState(false);
   const [newDate, setDate] = useState(new Date());
