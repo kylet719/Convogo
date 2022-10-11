@@ -22,10 +22,11 @@ function App() {
   }
 
   useEffect(() => {
+    /*global google*/
     const jwt = localStorage.getItem("user");
     if (!jwt) {
 
-      /*global google*/
+    
     google.accounts.id.initialize({
       client_id: "950362977131-f9spgsmvsbpelq3mrf3mp7um6ejbfgc9.apps.googleusercontent.com",
       callback: handleCallbackResponse

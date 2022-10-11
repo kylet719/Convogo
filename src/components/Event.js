@@ -345,11 +345,10 @@ const Event = () => {
                   {/* DISCUSSION PANEL  */}
                   <div className="Discussion overflow-auto mx-2 min-h-screen max-h-screen">
                     <h1 className="heading">Discussion</h1>
-                    <input placeholder="Enter user" type="text" value={username} onChange={(event) => setUsername(event.target.value)}></input>
                     <>
                       {eventItems["discussion"].map((discussionId) => (
                         <div >
-                          <Chat discussionId={discussionId} socket={socket} username={username} deleteDiscussion={deleteDiscussion} />
+                          <Chat discussionId={discussionId} socket={socket} username={username} deleteDiscussion={deleteDiscussion} account = {userObject} />
                         </div>
                       ))}
                     </>

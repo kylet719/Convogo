@@ -7,6 +7,7 @@ const messageSchema = new Schema({
   author: {type: String, required: true},
   chatroom: {type: String, required: true},
   time: {type: String, required: true},
+  authorId: {type: String, required: true}
 }, {
   timestamps: true
 });

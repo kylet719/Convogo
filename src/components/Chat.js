@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from 'react'
 import ScrollToBottom from "react-scroll-to-bottom";
 
-function Chat({username, discussionId, socket, deleteDiscussion}) {
+function Chat({username, discussionId, socket, deleteDiscussion, account}) {
     const [currentMessage, setCurrentMessage] = useState("");
     const [chatTitle, setChatTitle] = useState("No title");
     const [messageList, setMessageList] = useState([]);
@@ -36,10 +36,11 @@ function Chat({username, discussionId, socket, deleteDiscussion}) {
     const sendMessage = async () => {
       if (currentMessage !== "") {
         const messageData = {
-          author: username ?? "Anonymous",
+          author: account["name"],
           message: currentMessage,
           chatroom: discussionId,
           time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
+          authorId: account["sub"]
         };
         await socket.emit("send_message", messageData);
         messageList.push(messageData);
@@ -63,7 +64,7 @@ function Chat({username, discussionId, socket, deleteDiscussion}) {
               return (
                 <div
                   className="message"
-                  id={username === messageContent.author ? "other" : "you"}
+                  id={account["sub"] === messageContent.authorId ? "other" : "you"}
                 >
                   <div>
                     <div className="message-content">

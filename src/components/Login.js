@@ -2,7 +2,13 @@ import React from 'react'
 
 const Login = () => {
   return (
-        <div id="signInDiv">Google button</div>
+    <>
+    <h1>CONVOGO</h1>
+     <div id="signInDiv">Google button</div>
+
+    </>
+   
+        
   )
 }
 
