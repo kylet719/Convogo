@@ -7,6 +7,14 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.route('/batch').post((req, res) => {
+  Event.find({
+    '_id': { $in: req.body.ids}
+})
+    .then(events => res.json(events))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
 router.route('/add').post((req, res) => {
   const owner = req.body.owner;
   const title = req.body.title;
@@ -25,7 +33,7 @@ router.route('/add').post((req, res) => {
   });
 
   newEvent.save()
-  .then(() => res.json('event added!'))
+  .then(() => res.json(newEvent._id))
   .catch(err => res.status(400).json('Error: ' + err));
 });
 
