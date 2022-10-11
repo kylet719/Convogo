@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Activities from "./Activities";
 import DateAdd from "./Modal/DateModal";
 import ActivityAdd from "./Modal/ActivityModal";
+import ViewEditModal from "./Modal/ViewEditModal";
 import ItineraryItem from "./ItineraryItem";
 import Chat from "./Chat";
 import Activity from "./Activities";
@@ -22,6 +23,13 @@ const Event = () => {
   const [username, setUsername] = useState("")
   const [userObject, setUserObject] = useState()
 
+  const testActivity = {
+    title: "test",
+  };
+
+  const [activity, setActivity] = useState(testActivity)
+
+
   //#region database calls
   useEffect(() => {
     const obj = jwtDecode(localStorage.getItem("user"));
@@ -33,7 +41,7 @@ const Event = () => {
     }
     getEvents()
 
-    
+
 
   }, [])
 
@@ -294,7 +302,7 @@ const Event = () => {
                 <div className="navbar bg-base-100">
                   <div className="flex-none">
                     {/* <a href='/' className="btn btn-ghost normal-case text-xl">Convogo</a> */}
-                    <button onClick = {() => window.location = '/'} className="btn btn-ghost normal-case text-xl">Convogo</button>
+                    <button onClick={() => window.location = '/'} className="btn btn-ghost normal-case text-xl">Convogo</button>
                   </div>
                   <div className="flex-1">
                     <button className="btn btn-square btn-ghost">
@@ -332,8 +340,11 @@ const Event = () => {
                       moveItem={moveItem}
                       deleteFunction={deleteActivity}
                       refresh={refresh}
-                      startDiscussion={addNewDiscussion} />
+                      startDiscussion={addNewDiscussion}
+                      setActivity={setActivity} />
+                    <ViewEditModal activity={activity} ></ViewEditModal>
                     <ActivityAdd param={eventItems["_id"]} submitButton={activityModalSubmit} />
+
 
                   </div>
 
@@ -364,7 +375,7 @@ const Event = () => {
                     <>
                       {eventItems["discussion"].map((discussionId) => (
                         <div >
-                          <Chat discussionId={discussionId} socket={socket} username={username} deleteDiscussion={deleteDiscussion} account = {userObject} />
+                          <Chat discussionId={discussionId} socket={socket} username={username} deleteDiscussion={deleteDiscussion} account={userObject} />
                         </div>
                       ))}
                     </>

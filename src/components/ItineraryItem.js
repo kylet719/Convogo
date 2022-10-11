@@ -6,7 +6,7 @@ import ItineraryActivity from './ItinieraryActivity';
 
 const ItineraryItem = ({ index, date, activities, deleteFunction, dropFunction, fullActivityList, removeActivity }) => {
   const [isExpanded, setExpanded] = useState(activities.length > 0)
-
+  const [hasActivites, setActivities] = useState(activities.length > 0)
 
 
   //#region Drag and drop stuff
@@ -28,6 +28,7 @@ const ItineraryItem = ({ index, date, activities, deleteFunction, dropFunction, 
   return (
     <div ref={drop} className="day" onClick={() => setExpanded(!isExpanded)} style={{ border: isOver ? "5px solid yellow" : "0px" }}>
       <h3 className="dayTitle">
+        {(hasActivites && !isExpanded) ? <div className='triangle-black inline-block mr-2'>^</div> : (hasActivites) ? <div className='triangle-black open inline-block mr-2'>^</div> : <div className='invisible inline-block mr-2'>^</div>}
         {new Date(date).toString().substring(0, 15)}
         <button className='btn btn-xs btn-outline btn-error float-right' onClick={() => deleteFunction(new Date(date).toString())}>Delete</button>
       </h3>

@@ -14,8 +14,8 @@ const ItineraryActicity = ({ index, activities, id, remove }) => {
 
     return (
         <div className='flex ml-4'>
-            <div className='w-10 felx-none'>
-                <p className=''>{getTime(id)}</p>
+            <div className='w-10 flex-none'>
+                <p className='text-xs text-right mr-1'>{getTime(id)}</p>
             </div>
             <div className='vertical-line'></div>
             <div className='flex-grow'>
