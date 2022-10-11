@@ -5,6 +5,7 @@ import Activities from "./Activities";
 import DateAdd from "./Modal/DateModal";
 import ActivityAdd from "./Modal/ActivityModal";
 import ViewEditModal from "./Modal/ViewEditModal";
+import InviteModal from "./Modal/InviteModal";
 import ItineraryItem from "./ItineraryItem";
 import Chat from "./Chat";
 import Activity from "./Activities";
@@ -12,6 +13,7 @@ import { io } from 'socket.io-client'
 import Nav from "./nav";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
+import Members from "./Members";
 
 const socket = io.connect("http://localhost:5001")
 
@@ -288,6 +290,19 @@ const Event = () => {
     window.location = '/event/' + params.id;
   }
 
+  const sendInvite = (email, note) => {
+    const newInvite = {
+      senderEmail: userObject["email"],
+      senderPic: userObject["picture"],
+      senderName: userObject["name"],
+      eventId: eventItems["_id"],
+      eventTitle: eventItems["title"],
+      receiveEmail: email,
+      note: note
+    };
+    axios.post("http://localhost:5000/invitations/add", newInvite).then(res => console.log(res.data));
+  }
+
   return (
     <>
       {status ?
@@ -388,6 +403,8 @@ const Event = () => {
                   {/*MEMBERS PANEL*/}
                   <div className="Members mx-2 min-h-screen max-h-screen">
                     <h1 className="heading">Members</h1>
+                    <Members memberList={eventItems["editors"]} />
+                    <InviteModal sendInvite = {sendInvite}/>
                   </div>
                 </div>
 

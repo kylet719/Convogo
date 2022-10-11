@@ -19,10 +19,19 @@ const daySchema = new Schema({
   timestamps: true
 });
 
+const editorSchema = new Schema({
+  googleId: {type:String, required: true},
+  name: {type:String, required: true},
+  email: {type:String},
+  picture: {type:String},
+}, {
+  timestamps: true
+});
+
 const eventSchema = new Schema({
   owner: { type: String, required: true },
   title: {type: String, required: true},
-  editors: [{ type: String}],
+  editors: [editorSchema],
   itinerary: [daySchema],
   discussion: [String],
   activities: [{type: activitySchema}],

@@ -22,10 +22,12 @@ connection.once('open', () => {
 const eventRouter = require('./routes/events');
 const usersRouter = require('./routes/users');
 const chatRouter = require('./routes/chats');
+const invitationRouter = require('./routes/invitations');
 
 app.use('/events', eventRouter);
 app.use('/users', usersRouter);
 app.use('/chats', chatRouter);
+app.use('/invitations', invitationRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
