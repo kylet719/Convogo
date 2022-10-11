@@ -66,7 +66,19 @@ const Event = () => {
     window.location = '/event/' + params.id;
   }
 
+  const removeActivity = (id, index) => {
 
+    eventItems["itinerary"][index]["activityids"] = eventItems["itinerary"][index]["activityids"].filter(item => item != id);
+
+    const indexOfActivityWeNeed = eventItems["activities"].findIndex(item => item._id === id)
+
+    eventItems["activities"][indexOfActivityWeNeed]["date"] = null
+
+    axios.post('http://localhost:5000/events/update/' + params.id, eventItems).then(res => console.log(res.data));
+    setEventItems(eventItems);
+    window.location = '/event/' + params.id;
+
+  }
 
   const deleteActivity = (activity, index) => {
     console.log(activity);
@@ -329,13 +341,17 @@ const Event = () => {
                   <div className="itinerary overflow-atuo mx-2 min-h-screen max-h-screen">
                     <h1 className="heading">Itinerary</h1>
                     <>
-                      {eventItems["itinerary"].map((day) => (
+                      {eventItems["itinerary"].map((day, index) => (
                         <div >
-                          <ItineraryItem date={day.date}
+                          <ItineraryItem
+                            index={index}
+                            date={day.date}
                             activities={day.activityids}
                             deleteFunction={deleteDay}
                             dropFunction={dndActivity2Day}
-                            fullActivityList={eventItems["activities"]} />
+                            fullActivityList={eventItems["activities"]}
+                            removeActivity={removeActivity}
+                          />
                         </div>
                       ))}
                     </>
