@@ -18,6 +18,12 @@ code {
     monospace;
 }
 
+.vertical-line {
+  border-left: solid black;
+  margin-right: 10px;
+
+}
+
 .eventview {
   display: grid;
   grid-template-columns:10% 25% 25% 25% 15%;
