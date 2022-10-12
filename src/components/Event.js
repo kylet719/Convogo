@@ -4,12 +4,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import Activities from "./Activities";
 import DateAdd from "./Modal/DateModal";
 import ActivityAdd from "./Modal/ActivityModal";
+import ViewEditModal from "./Modal/ViewEditModal";
+import InviteModal from "./Modal/InviteModal";
 import ItineraryItem from "./ItineraryItem";
 import Chat from "./Chat";
 import Activity from "./Activities";
 import { io } from 'socket.io-client'
 import Nav from "./nav";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import jwtDecode from "jwt-decode";
+import Members from "./Members";
 
 const socket = io.connect("http://localhost:5001")
 
@@ -19,14 +23,28 @@ const Event = () => {
   const params = useParams()
   //TEMPORARY UNTIL WE GET ACCOUNTS GOING
   const [username, setUsername] = useState("")
+  const [userObject, setUserObject] = useState()
+
+  const testActivity = {
+    title: "test",
+  };
+
+  const [activity, setActivity] = useState(testActivity)
+
 
   //#region database calls
   useEffect(() => {
+    const obj = jwtDecode(localStorage.getItem("user"));
+    setUserObject(obj);
+
     const getEvents = async () => {
       const taskFromServer = await fetchEvent()
       setEventItems(taskFromServer)
     }
     getEvents()
+
+
+
   }, [])
 
   const fetchEvent = async (id) => {
@@ -272,6 +290,19 @@ const Event = () => {
     window.location = '/event/' + params.id;
   }
 
+  const sendInvite = (email, note) => {
+    const newInvite = {
+      senderEmail: userObject["email"],
+      senderPic: userObject["picture"],
+      senderName: userObject["name"],
+      eventId: eventItems["_id"],
+      eventTitle: eventItems["title"],
+      receiveEmail: email,
+      note: note
+    };
+    axios.post("http://localhost:5000/invitations/add", newInvite).then(res => console.log(res.data));
+  }
+
   return (
     <>
       {status ?
@@ -285,7 +316,8 @@ const Event = () => {
 
                 <div className="navbar bg-base-100">
                   <div className="flex-none">
-                    <a href='/' className="btn btn-ghost normal-case text-xl">Convogo</a>
+                    {/* <a href='/' className="btn btn-ghost normal-case text-xl">Convogo</a> */}
+                    <button onClick={() => window.location = '/'} className="btn btn-ghost normal-case text-xl">Convogo</button>
                   </div>
                   <div className="flex-1">
                     <button className="btn btn-square btn-ghost">
@@ -312,7 +344,7 @@ const Event = () => {
                     <h1 className="title left absolute">{eventItems["title"]}</h1>
                     <div className="absolute bottom-0 left-0">
                       <button className="btn" onClick={() => console.log(eventItems)}>Log Current Event</button>
-                      <button className="btn" onClick={() => console.log(eventItems["discussion"])}>Test</button>
+                      <button className="btn" onClick={() => console.log(userObject)}>Test</button>
                     </div>
                   </div>
 
@@ -323,8 +355,11 @@ const Event = () => {
                       moveItem={moveItem}
                       deleteFunction={deleteActivity}
                       refresh={refresh}
-                      startDiscussion={addNewDiscussion} />
+                      startDiscussion={addNewDiscussion}
+                      setActivity={setActivity} />
+                    <ViewEditModal activity={activity} ></ViewEditModal>
                     <ActivityAdd param={eventItems["_id"]} submitButton={activityModalSubmit} />
+
 
                   </div>
 
@@ -352,11 +387,10 @@ const Event = () => {
                   {/* DISCUSSION PANEL  */}
                   <div className="Discussion overflow-auto mx-2 min-h-screen max-h-screen">
                     <h1 className="heading">Discussion</h1>
-                    <input placeholder="Enter user" type="text" value={username} onChange={(event) => setUsername(event.target.value)}></input>
                     <>
                       {eventItems["discussion"].map((discussionId) => (
                         <div >
-                          <Chat discussionId={discussionId} socket={socket} username={username} deleteDiscussion={deleteDiscussion} />
+                          <Chat discussionId={discussionId} socket={socket} username={username} deleteDiscussion={deleteDiscussion} account={userObject} />
                         </div>
                       ))}
                     </>
@@ -369,6 +403,8 @@ const Event = () => {
                   {/*MEMBERS PANEL*/}
                   <div className="Members mx-2 min-h-screen max-h-screen">
                     <h1 className="heading">Members</h1>
+                    <Members memberList={eventItems["editors"]} />
+                    <InviteModal sendInvite = {sendInvite}/>
                   </div>
                 </div>
 
@@ -377,8 +413,9 @@ const Event = () => {
                 <label htmlFor="my-drawer" className="drawer-overlay"></label>
                 <ul className="menu p-4 overflow-y-auto w-min bg-base-100 text-base-content">
                   {/* <!-- Sidebar content here --> */}
-                  <li><a>Sidebar Item 1</a></li>
-                  <li><a>Sidebar Item 2</a></li>
+                  <li><img src={userObject["picture"]} alt="Profile Pic" /></li>
+                  <li><a>{userObject["name"]}</a></li>
+                  <li><a onClick = {()=> {localStorage.removeItem("user"); window.location = '/';}}>Sign out</a></li>
                 </ul>
               </div>
             </div>

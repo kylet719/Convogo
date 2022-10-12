@@ -24,6 +24,16 @@ code {
 
 }
 
+.triangle-black {
+  transform: rotate(180deg);
+  transition: transform .2s linear;
+}
+
+.triangle-black.open {
+  transform: rotate(0deg);
+  transition: transform .2s linear;
+}
+
 .eventview {
   display: grid;
   grid-template-columns:10% 25% 25% 25% 15%;
