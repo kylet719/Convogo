@@ -415,7 +415,7 @@ const Event = () => {
                   {/* <!-- Sidebar content here --> */}
                   <li><img src={userObject["picture"]} alt="Profile Pic" /></li>
                   <li><a>{userObject["name"]}</a></li>
-                  <li><a>Sidebar Item 2</a></li>
+                  <li><a onClick = {()=> {localStorage.removeItem("user"); window.location = '/';}}>Sign out</a></li>
                 </ul>
               </div>
             </div>

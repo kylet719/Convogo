@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 
-const Dashboard = ({userEvents, signout, newEvent, deleteEvent, pendingInvites}) => {
+const Dashboard = ({userEvents, attendingEvents, signout, newEvent, deleteEvent, pendingInvites}) => {
   const [tempEvent, setEventName] = useState("")
 
   const joinEvent = (eventId, inviteId) => {
@@ -19,7 +19,18 @@ const Dashboard = ({userEvents, signout, newEvent, deleteEvent, pendingInvites})
         var receivedEvent = res.data;
         receivedEvent["editors"].push(newMember)
         axios.post(`http://localhost:5000/events/update/${eventId}`, receivedEvent).then(() => {
-          axios.delete(`http://localhost:5000/invitations/${inviteId}`).then(window.location = '/')
+          axios.delete(`http://localhost:5000/invitations/${inviteId}`);
+
+          axios.get('http://localhost:5000/users/' + obj["sub"]).then(resTwo=> {
+            var updatedUser = resTwo.data;
+            
+            updatedUser["pEventsInProgress"].push(eventId)
+            console.log(updatedUser)
+            axios.post('http://localhost:5000/users/update/' + obj["sub"], updatedUser).then( update => {
+              console.log(update.data)
+              window.location ='/'
+            })
+          })
         })
       });
   }
@@ -38,8 +49,18 @@ const Dashboard = ({userEvents, signout, newEvent, deleteEvent, pendingInvites})
           </div>
     ))}
     <button onClick = {() => newEvent(tempEvent)}>ADD EVENT</button>
-    <input type="text" value = {tempEvent} onChange ={(e) => setEventName(e.target.value)}></input>
-    <button onClick= {() => signout()}>Sign out</button>
+    <input className="g-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"type="text" value = {tempEvent} onChange ={(e) => setEventName(e.target.value)}></input>
+    
+    
+
+    <h1 className="heading">Attending </h1>
+    {attendingEvents.map((event) => (
+          <div className="dayTitle"> 
+          <Link className = {"whiteFont"} style={{ textDecoration: 'none' }} to={`/event/${event._id}`}>{event.title}</Link>
+          <button className='btn btn-xs btn-outline btn-error float-right' onClick = {() => deleteEvent(event._id, null, null)}>Leave</button>
+          </div>
+    ))}
+
     <h1 className="heading">Pending Invites</h1>
     {pendingInvites.map((invite) => (
           <div className="dayTitle"> 
@@ -49,6 +70,7 @@ const Dashboard = ({userEvents, signout, newEvent, deleteEvent, pendingInvites})
           <button className='btn btn-xs btn-outline btn-error' onClick ={() => declineEvent(invite._id)}>Decline</button>
           </div>
     ))}
+    <button className='btn btn-xs btn-outline btn-error' onClick= {() => signout()}>Sign out</button>
     </div>
   )
 }
