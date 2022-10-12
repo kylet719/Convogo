@@ -14,6 +14,7 @@ function App() {
   const [currentUser, setUser] = useState()
   const [pendingInvites, setInvites] = useState([])
   const [eventItemsOO, setEventItemsOO] = useState([])
+  const [eventItemsAO, setEventItemsAO] = useState([])
 
   useEffect(() => {
     /*global google*/
@@ -40,8 +41,16 @@ function App() {
         }
         axios.post('http://localhost:5000/events/batch', batchRequest).then(resTwo => {
           setEventItemsOO(resTwo.data);
-          setEventsLoaded(true);
+          const batchAttending = {
+            ids: res.data["pEventsInProgress"]
+          }
+          axios.post('http://localhost:5000/events/batch', batchAttending).then(resThree => {
+            setEventItemsAO(resThree.data);
+            setEventsLoaded(true);
+          })
         })
+
+        
 
         const getInvites = {
           email: obj["email"]
@@ -77,8 +86,15 @@ function App() {
           const batchRequest = {
             ids: res.data["oEventsInProgress"]
           }
-          axios.post('http://localhost:5000/events/batch', batchRequest).then(res => {
-            setEventItemsOO(res.data);
+          axios.post('http://localhost:5000/events/batch', batchRequest).then(r => {
+            setEventItemsOO(r.data);
+            const batchAttending = {
+              ids: res.data["pEventsInProgress"]
+            }
+            axios.post('http://localhost:5000/events/batch', batchAttending).then(resTwo => {
+              setEventItemsAO(resTwo.data);
+              setEventsLoaded(true);
+            })
           })
 
           const getInvites = {
@@ -131,7 +147,7 @@ function App() {
           <h1 className="text-3xl font-bold"><Link to='/' className={"titleCard"} style={{ textDecoration: 'none' }}>CONVOGO</Link></h1>
           {/* <div id="signInDiv"></div> */}
           <Routes>
-            <Route path='/' element={<>{ loggedIn ? (eventsLoaded ? (<Dashboard userEvents={eventItemsOO} signout = {handleSignOut} newEvent ={createEvent} deleteEvent = {deleteEvent} pendingInvites = {pendingInvites} />) : ("Loading")): (<Login/>) }</>} />
+            <Route path='/' element={<>{ loggedIn ? (eventsLoaded ? (<Dashboard userEvents={eventItemsOO} attendingEvents = {eventItemsAO} signout = {handleSignOut} newEvent ={createEvent} deleteEvent = {deleteEvent} pendingInvites = {pendingInvites} />) : ("Loading")): (<Login/>) }</>} />
             <Route path='/event/:id' element={<Event />} />
           </Routes>
           <footer></footer>
