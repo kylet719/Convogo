@@ -8,7 +8,7 @@ const ViewEditModal = ({ activity, updateActivity }) => {
         const location = document.getElementById('location').value == "" ? activity.location : document.getElementById('location').value;
         const time = document.getElementById('time').value == "" ? activity.time : document.getElementById('time').value;
         const title = document.getElementById('title').value == "" ? activity.title : document.getElementById('title').value;
-        const details = document.getElementById('details').value == "" ? activity.title : document.getElementById('details').value;
+        const details = document.getElementById('details').value == "" ? activity.details : document.getElementById('details').value;
         e.preventDefault()
         updateActivity(activity._id, location, time, title, details);
     }
