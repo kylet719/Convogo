@@ -304,6 +304,24 @@ const Event = () => {
     axios.post("http://localhost:5000/invitations/add", newInvite).then(res => console.log(res.data));
   }
 
+  const updateActivity = (activityID, location, time, title, details) => {
+
+    const indexOfActivityWeNeed = eventItems["activities"].findIndex(activity => activity._id === activityID)
+
+    console.log(indexOfActivityWeNeed);
+
+    eventItems["activities"][indexOfActivityWeNeed]["location"] = location;
+    eventItems["activities"][indexOfActivityWeNeed]["time"] = time;
+    eventItems["activities"][indexOfActivityWeNeed]["title"] = title;
+    eventItems["activities"][indexOfActivityWeNeed]["details"] = details;
+
+
+    axios.post('http://localhost:5000/events/update/' + params.id, eventItems).then(res => console.log(res.data));
+    setEventItems(eventItems);
+    window.location = '/event/' + params.id;
+
+  }
+
   return (
     <>
       {status ?
@@ -358,8 +376,9 @@ const Event = () => {
                       deleteFunction={deleteActivity}
                       refresh={refresh}
                       startDiscussion={addNewDiscussion}
-                      setActivity={setActivity} />
-                    <ViewEditModal activity={activity} ></ViewEditModal>
+                      setActivity={setActivity}
+                    />
+                    <ViewEditModal activity={activity} updateActivity={updateActivity} ></ViewEditModal>
                     <ActivityAdd param={eventItems["_id"]} submitButton={activityModalSubmit} />
 
 
@@ -406,7 +425,7 @@ const Event = () => {
                   <div className="Members mx-2 min-h-screen max-h-screen">
                     <h1 className="heading">Members</h1>
                     <Members memberList={eventItems["editors"]} />
-                    <InviteModal sendInvite = {sendInvite}/>
+                    <InviteModal sendInvite={sendInvite} />
                   </div>
 
                 </div>
