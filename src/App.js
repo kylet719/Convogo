@@ -7,6 +7,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import jwtDecode from "jwt-decode";
 import Login from "./components/Login";
 import axios from "axios";
+import Sidebar from "./components/Sidebar";
 
 function App() {
   const [loggedIn, setLogIn] = useState(false)
@@ -144,10 +145,11 @@ function App() {
     <DndProvider backend={HTML5Backend}>
       <Router>
         <div className="">
+          {/* {!loggedIn && !eventsLoaded ? "": <Sidebar userObject = {currentUser}/>} */}
           <h1 className="text-3xl font-bold"><Link to='/' className={"titleCard"} style={{ textDecoration: 'none' }}>CONVOGO</Link></h1>
           {/* <div id="signInDiv"></div> */}
           <Routes>
-            <Route path='/' element={<>{ loggedIn ? (eventsLoaded ? (<Dashboard userEvents={eventItemsOO} attendingEvents = {eventItemsAO} signout = {handleSignOut} newEvent ={createEvent} deleteEvent = {deleteEvent} pendingInvites = {pendingInvites} />) : ("Loading")): (<Login/>) }</>} />
+            <Route path='/' element={<>{ loggedIn ? (eventsLoaded ? (<><Dashboard userEvents={eventItemsOO} attendingEvents = {eventItemsAO} signout = {handleSignOut} newEvent ={createEvent} deleteEvent = {deleteEvent} pendingInvites = {pendingInvites} /></>) : ("Loading")): (<Login/>) }</>} />
             <Route path='/event/:id' element={<Event />} />
           </Routes>
           <footer></footer>
