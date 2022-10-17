@@ -25,7 +25,7 @@ const ItineraryItem = ({ index, date, activities, deleteFunction, dropFunction, 
   //#endregion
 
   return (
-    <div ref={drop} className="day" onClick={() => setExpanded(!isExpanded)} style={{ border: isOver ? "5px solid yellow" : "0px" }}>
+    <div ref={drop} className="day" onClick={() => setExpanded(!isExpanded)} style={{ border: isOver ? "2px solid #37CDBE" : "0px" }}>
       <h3 className="dayTitle">
         {(hasActivites && !isExpanded) ? <div className='triangle-black inline-block mr-2'>^</div> : (hasActivites) ? <div className='triangle-black open inline-block mr-2'>^</div> : <div className='invisible inline-block mr-2'>^</div>}
         {new Date(date).toString().substring(0, 15)}

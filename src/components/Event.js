@@ -329,7 +329,6 @@ const Event = () => {
           <div id="parent">
 
             <div className="drawer drawer-mobile">
-              <Sidebar userObject={userObject}/>
               <input id="my-drawer" type="checkbox" className="drawer-toggle" />
               <div className="drawer-content">
                 {/* <!-- Page content here --> */}
@@ -432,11 +431,9 @@ const Event = () => {
 
               </div>
 
-              
+              <Sidebar userObject={userObject} />
 
-              
 
-              
             </div>
 
           </div>

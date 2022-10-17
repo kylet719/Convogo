@@ -39,6 +39,11 @@ code {
   grid-template-columns:10% 25% 25% 25% 15%;
 }
 
+.dashview {
+  display: grid;
+  grid-template-columns:33% 33% 33%;
+}
+
 .container {
   margin:5vh auto;
 }

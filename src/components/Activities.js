@@ -55,7 +55,7 @@ const Activity = ({ activity, index, moveItem, deleteFunction, startDiscussion, 
       <label onClick={event => setActivity(activity)} htmlFor="my-modal-10" className="modal-button">
         <div className="activity h-12"
           ref={ref}
-          style={{ border: isDragging ? "5px solid #37CDBE" : "0px" }}>
+          style={{ border: isDragging ? "2px solid #37CDBE" : "0px" }}>
           <h3>{activity.title}
             {/* @ {activity.time} */}
             <button className='btn mt-1 btn-outline btn-circle btn-error btn-xs float-right' onClick={() => deleteFunction(activity._id, index)}>
