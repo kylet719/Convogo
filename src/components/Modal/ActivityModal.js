@@ -23,10 +23,6 @@ export default function Modal({ param, submitButton }) {
   const [newRelatedDiscussions, setRelatedDiscussions] = useState([]);
   const [activity, setActivity] = useState(newActivity);
 
-  const toggleModal = () => {
-    setModal(!modal);
-  };
-
   //#region  Modal stuff dunno what it does
   if (modal) {
     document.body.classList.add('active-modal')

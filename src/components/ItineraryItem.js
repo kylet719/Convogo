@@ -1,7 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
 import { useDrop } from "react-dnd";
-import ItineraryActicity from './ItinieraryActivity';
 import ItineraryActivity from './ItinieraryActivity';
 
 const ItineraryItem = ({ index, date, activities, deleteFunction, dropFunction, fullActivityList, removeActivity }) => {
@@ -30,7 +29,9 @@ const ItineraryItem = ({ index, date, activities, deleteFunction, dropFunction, 
       <h3 className="dayTitle">
         {(hasActivites && !isExpanded) ? <div className='triangle-black inline-block mr-2'>^</div> : (hasActivites) ? <div className='triangle-black open inline-block mr-2'>^</div> : <div className='invisible inline-block mr-2'>^</div>}
         {new Date(date).toString().substring(0, 15)}
-        <button className='btn btn-xs btn-outline btn-error float-right' onClick={() => deleteFunction(new Date(date).toString())}>Delete</button>
+        <button className='btn btn-circle btn-xs btn-outline btn-error float-right' onClick={() => deleteFunction(new Date(date).toString())}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
       </h3>
 
       {(isExpanded || isOver) && activities.length > 0 ?
@@ -39,7 +40,7 @@ const ItineraryItem = ({ index, date, activities, deleteFunction, dropFunction, 
             <ul>
               {activities.map((item) => (
                 <li >
-                  <ItineraryActicity index={index} activities={fullActivityList} id={item} remove={removeActivity}></ItineraryActicity>
+                  <ItineraryActivity index={index} activities={fullActivityList} id={item} remove={removeActivity} />
                 </li>
               ))}
             </ul>
