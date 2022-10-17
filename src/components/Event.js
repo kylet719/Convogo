@@ -10,10 +10,11 @@ import ItineraryItem from "./ItineraryItem";
 import Chat from "./Chat";
 import Activity from "./Activities";
 import { io } from 'socket.io-client'
-import Nav from "./nav";
+import Nav from "./Sidebar";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import Members from "./Members";
+import Sidebar from "./Sidebar";
 
 const socket = io.connect("http://localhost:5001")
 
@@ -328,6 +329,7 @@ const Event = () => {
           <div id="parent">
 
             <div className="drawer drawer-mobile">
+              <Sidebar userObject={userObject}/>
               <input id="my-drawer" type="checkbox" className="drawer-toggle" />
               <div className="drawer-content">
                 {/* <!-- Page content here --> */}
@@ -425,19 +427,16 @@ const Event = () => {
                     <Members memberList={eventItems["editors"]} />
                     <InviteModal sendInvite={sendInvite} />
                   </div>
+
                 </div>
 
               </div>
-              <div className="drawer-side">
-                <label htmlFor="my-drawer" className="drawer-overlay"></label>
-                <ul className="menu p-4 overflow-y-auto w-min bg-base-100 text-base-content">
 
-                  {/* <!-- Sidebar content here --> */}
-                  <li><img src={userObject["picture"]} alt="Profile Pic" /></li>
-                  <li><a>{userObject["name"]}</a></li>
-                  <li><a onClick={() => { localStorage.removeItem("user"); window.location = '/'; }}>Sign out</a></li>
-                </ul>
-              </div>
+              
+
+              
+
+              
             </div>
 
           </div>
