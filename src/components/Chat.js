@@ -55,7 +55,8 @@ function Chat({username, discussionId, socket, deleteDiscussion, account}) {
 
     return (
       <div className="chat-window">
-        <div className="chat-header"><p>{chatTitle} <button onClick={() => deleteDiscussion(discussionId)}> Delete Chat</button></p>
+        <div className="chat-header"><p>{chatTitle} 
+        <button className='btn my-1 btn-xs btn-outline  btn-error' onClick={() => deleteDiscussion(discussionId)}> Delete Chat</button></p>
         </div>
         
         <div className="chat-body">

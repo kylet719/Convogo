@@ -322,6 +322,22 @@ const Event = () => {
 
   }
 
+  const getUninvitied = (uninvitedId) => {
+    console.log(uninvitedId)
+    eventItems["editors"] = eventItems["editors"].filter(i => i.googleId !== uninvitedId);
+    axios.post('http://localhost:5000/events/update/' + params.id, eventItems).then(res => {
+      setEventItems(eventItems);
+      axios.get(`http://localhost:5000/users/${uninvitedId}`).then(res => {
+        const personUninvited = res.data;
+        personUninvited["pEventsInProgress"] = personUninvited["pEventsInProgress"].filter(i => i !== eventItems["_id"])
+        axios.post(`http://localhost:5000/users/update/${uninvitedId}`, personUninvited).then(res => {
+          window.location = '/event/' + params.id;
+        });
+      });
+    }
+    );
+  }
+
   return (
     <>
       {status ?
@@ -423,7 +439,7 @@ const Event = () => {
                   {/*MEMBERS PANEL*/}
                   <div className="Members mx-2 min-h-screen max-h-screen">
                     <h1 className="heading">Members</h1>
-                    <Members memberList={eventItems["editors"]} />
+                    <Members memberList={eventItems["editors"]} isOwner={userObject["sub"]===eventItems["owner"] } currentUser={userObject["sub"]} uninvite ={getUninvitied}/>
                     <InviteModal sendInvite={sendInvite} />
                   </div>
 

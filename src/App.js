@@ -117,14 +117,24 @@ function App() {
   }
 
   const createEvent = (title) => {
+    const obj = jwtDecode(localStorage.getItem("user"))
     const newEvent = {
       activities: [],
       discussion: [],
       editors: [],
-      owner: jwtDecode(localStorage.getItem("user"))["sub"],
+      owner: obj["sub"],
       title: title,
       itinerary: []
     };
+
+    const addOwner = {
+      googleId: obj["sub"],
+      name: obj["name"] + " (Organizer)",
+      email: obj["email"],
+      picture: obj["picture"]
+    }
+    newEvent["editors"].push(addOwner);
+
     axios.post('http://localhost:5000/events/add', newEvent).then(res => {
       currentUser["oEventsInProgress"].push(res.data);
       axios.post('http://localhost:5000/users/update/' + jwtDecode(localStorage.getItem("user"))["sub"], currentUser).then(res => {
@@ -141,6 +151,19 @@ function App() {
     });
   }
 
+  const leaveEvent = (eventId) => {
+    currentUser["pEventsInProgress"] = currentUser["pEventsInProgress"].filter(item => item !== eventId)
+    axios.post(`http://localhost:5000/users/update/${currentUser["googleId"]}`, currentUser).then(res => {
+      axios.get(`http://localhost:5000/events/${eventId}`).then(res => {
+        var receivedEvent = res.data;
+        receivedEvent["editors"] = receivedEvent["editors"].filter(i=> i.googleId !== currentUser["googleId"])
+        axios.post(`http://localhost:5000/events/update/${eventId}`, receivedEvent).then(() => {
+          window.location = '/';
+        })
+      });
+    });
+  }
+
   return (
     <DndProvider backend={HTML5Backend}>
       <Router>
@@ -149,7 +172,7 @@ function App() {
           <h1 className="text-3xl font-bold"><Link to='/' className={"titleCard"} style={{ textDecoration: 'none' }}>CONVOGO</Link></h1>
           {/* <div id="signInDiv"></div> */}
           <Routes>
-            <Route path='/' element={<>{ loggedIn ? (eventsLoaded ? (<><Dashboard userEvents={eventItemsOO} attendingEvents = {eventItemsAO} signout = {handleSignOut} newEvent ={createEvent} deleteEvent = {deleteEvent} pendingInvites = {pendingInvites} /></>) : ("Loading")): (<Login/>) }</>} />
+            <Route path='/' element={<>{ loggedIn ? (eventsLoaded ? (<><Dashboard userEvents={eventItemsOO} attendingEvents = {eventItemsAO} signout = {handleSignOut} newEvent ={createEvent} deleteEvent = {deleteEvent} pendingInvites = {pendingInvites} leaveEvent={leaveEvent}/></>) : ("Loading")): (<Login/>) }</>} />
             <Route path='/event/:id' element={<Event />} />
           </Routes>
           <footer></footer>

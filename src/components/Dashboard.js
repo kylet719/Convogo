@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import Sidebar from "./Sidebar";
+import EventModal from "./Modal/EventModal";
 
 
-const Dashboard = ({ userEvents, attendingEvents, signout, newEvent, deleteEvent, pendingInvites }) => {
-  const [tempEvent, setEventName] = useState("")
+const Dashboard = ({ userEvents, attendingEvents, signout, newEvent, deleteEvent, pendingInvites, leaveEvent }) => {
 
   const userObj = () => {
     return jwtDecode(localStorage.getItem("user"));
@@ -57,11 +57,10 @@ const Dashboard = ({ userEvents, attendingEvents, signout, newEvent, deleteEvent
             {userEvents.map((event) => (
               <div className="dayTitle">
                 <Link className={"whiteFont"} style={{ textDecoration: 'none' }} to={`/event/${event._id}`}>{event.title}</Link>
-                <button className='btn btn-xs btn-outline btn-error float-right' onClick={() => deleteEvent(event._id, null, null)}>Delete</button>
+                <button className='btn btn-xs btn-outline btn-error float-right' onClick={() => leaveEvent(event._id)}>Delete</button>
               </div>
             ))}
-            <button onClick={() => newEvent(tempEvent)}>ADD EVENT</button>
-            <input className="g-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="text" value={tempEvent} onChange={(e) => setEventName(e.target.value)}></input>
+            <EventModal createEvent={newEvent}/>
           </div>
 
           <div className="overflow-auto mx-2 min-h-screen max-h-screen">

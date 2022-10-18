@@ -5,7 +5,6 @@ const Login = () => {
     <>
     <h1>CONVOGO</h1>
      <div id="signInDiv">Google button</div>
-
     </>
    
         
