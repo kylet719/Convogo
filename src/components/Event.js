@@ -22,6 +22,10 @@ const Event = () => {
   const params = useParams()
   const [userObject, setUserObject] = useState()
 
+  //temp sidebar
+  const [bulkEvent, setBulkEvents] = useState([])
+  const [userSchema, setUserSchema] = useState()
+
   const testActivity = {
     title: "test",
   };
@@ -34,6 +38,19 @@ const Event = () => {
     const obj = jwtDecode(localStorage.getItem("user"));
     setUserObject(obj);
 
+    axios.get(`http://localhost:5000/users/${obj["sub"]}`).then(res => {
+      setUserSchema(res.data)
+
+      const batchRequest = {
+        ids: res.data["oEventsInProgress"].concat(res.data["pEventsInProgress"])
+      }
+
+      axios.post('http://localhost:5000/events/batch', batchRequest).then(r => {
+        setBulkEvents(r.data);
+    })
+
+    })
+
     const getEvents = async () => {
       const taskFromServer = await fetchEvent()
       setEventItems(taskFromServer)
@@ -43,6 +60,8 @@ const Event = () => {
 
   const fetchEvent = async (id) => {
     const res = await fetch(`http://localhost:5000/events/${params.id}`)
+
+
     const data = await res.json()
     setComplete(true)
     return data
@@ -438,7 +457,7 @@ const Event = () => {
 
               </div>
 
-              <Sidebar userObject={userObject} />
+              <Sidebar userObject={userObject} eventPackages= {bulkEvent}/>
 
 
             </div>

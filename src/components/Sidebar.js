@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
+import { Link } from 'react-router-dom'
 
 export default function Nav({ userObject, eventPackages }) {
   const [toggle, setToggle] = useState(false)
@@ -20,7 +21,7 @@ export default function Nav({ userObject, eventPackages }) {
           {toggle && eventPackages? (<>
             {eventPackages.map((event) => (
                         <li>
-                        <a href="#" className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">{event.title}</a>
+                        <a onClick={() => {window.location = '/event/' + event._id;}} href="#" className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">{event.title}</a>
                       </li>
                       ))}
           </>): ""}
