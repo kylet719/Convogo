@@ -10,8 +10,6 @@ import ItineraryItem from "./ItineraryItem";
 import Chat from "./Chat";
 import Activity from "./Activities";
 import { io } from 'socket.io-client'
-import Nav from "./Sidebar";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import Members from "./Members";
 import Sidebar from "./Sidebar";
@@ -22,9 +20,11 @@ const Event = () => {
   const [eventItems, setEventItems] = useState("")
   const [status, setComplete] = useState(false)
   const params = useParams()
-  //TEMPORARY UNTIL WE GET ACCOUNTS GOING
-  const [username, setUsername] = useState("")
   const [userObject, setUserObject] = useState()
+
+  //temp sidebar
+  const [bulkEvent, setBulkEvents] = useState([])
+  const [userSchema, setUserSchema] = useState()
 
   const testActivity = {
     title: "test",
@@ -38,18 +38,30 @@ const Event = () => {
     const obj = jwtDecode(localStorage.getItem("user"));
     setUserObject(obj);
 
+    axios.get(`http://localhost:5000/users/${obj["sub"]}`).then(res => {
+      setUserSchema(res.data)
+
+      const batchRequest = {
+        ids: res.data["oEventsInProgress"].concat(res.data["pEventsInProgress"])
+      }
+
+      axios.post('http://localhost:5000/events/batch', batchRequest).then(r => {
+        setBulkEvents(r.data);
+    })
+
+    })
+
     const getEvents = async () => {
       const taskFromServer = await fetchEvent()
       setEventItems(taskFromServer)
     }
     getEvents()
-
-
-
   }, [])
 
   const fetchEvent = async (id) => {
     const res = await fetch(`http://localhost:5000/events/${params.id}`)
+
+
     const data = await res.json()
     setComplete(true)
     return data
@@ -92,6 +104,7 @@ const Event = () => {
   }
 
   const deleteActivity = (activity, index) => {
+    debugger
     console.log(activity);
     console.log(index);
     const date = eventItems["activities"][index].date;
@@ -105,8 +118,6 @@ const Event = () => {
 
       console.log(eventItems)
       console.log("INDES" + indexOfDeleteDay)
-
-
 
       const filteredActivities = eventItems["itinerary"][indexOfDeleteDay]["activityids"].filter(item => item != activity)
 
@@ -233,7 +244,7 @@ const Event = () => {
       itinerary: newItinerary,
     };
     axios.post('http://localhost:5000/events/update/' + params.id, updatedEvent).then(res => console.log(res.data));
-    setEventItems(updatedEvent)
+    setEventItems({...updatedEvent})
     window.location = '/event/' + params.id;
   }
 
@@ -242,9 +253,7 @@ const Event = () => {
     console.log(activity)
     console.log(Date.parse(activity.date))
 
-
     eventItems.activities.push(activity);
-
 
     const updatedEvent = {
       activities: eventItems.activities,
@@ -258,7 +267,7 @@ const Event = () => {
     console.log(updatedEvent)
 
     axios.post('http://localhost:5000/events/update/' + params.id, updatedEvent).then(res => console.log(res.data));
-    setEventItems(updatedEvent)
+    setEventItems({...updatedEvent})
     window.location = '/event/' + params.id;
 
   }
@@ -322,7 +331,7 @@ const Event = () => {
 
   }
 
-  const getUninvitied = (uninvitedId) => {
+  const getUninvited = (uninvitedId) => {
     console.log(uninvitedId)
     eventItems["editors"] = eventItems["editors"].filter(i => i.googleId !== uninvitedId);
     axios.post('http://localhost:5000/events/update/' + params.id, eventItems).then(res => {
@@ -400,7 +409,7 @@ const Event = () => {
                   </div>
 
                   {/* ITINIERARY PANEL  */}
-                  <div className="itinerary overflow-atuo mx-2 min-h-screen max-h-screen">
+                  <div className="itinerary overflow-auto mx-2 min-h-screen max-h-screen">
                     <h1 className="heading">Itinerary</h1>
                     <>
                       {eventItems["itinerary"].map((day, index) => (
@@ -426,7 +435,7 @@ const Event = () => {
                     <>
                       {eventItems["discussion"].map((discussionId) => (
                         <div >
-                          <Chat discussionId={discussionId} socket={socket} username={username} deleteDiscussion={deleteDiscussion} account={userObject} />
+                          <Chat discussionId={discussionId} socket={socket} deleteDiscussion={deleteDiscussion} account={userObject} />
                         </div>
                       ))}
                     </>
@@ -437,9 +446,10 @@ const Event = () => {
                   </div>
 
                   {/*MEMBERS PANEL*/}
-                  <div className="Members mx-2 min-h-screen max-h-screen">
+                  <div className="Members overflow-auto mx-2 min-h-screen max-h-screen space-y-2">
+                    
                     <h1 className="heading">Members</h1>
-                    <Members memberList={eventItems["editors"]} isOwner={userObject["sub"]===eventItems["owner"] } currentUser={userObject["sub"]} uninvite ={getUninvitied}/>
+                    <Members memberList={eventItems["editors"]} isOwner={userObject["sub"]===eventItems["owner"] } currentUser={userObject["sub"]} uninvite ={getUninvited}/>
                     <InviteModal sendInvite={sendInvite} />
                   </div>
 
@@ -447,7 +457,7 @@ const Event = () => {
 
               </div>
 
-              <Sidebar userObject={userObject} />
+              <Sidebar userObject={userObject} eventPackages= {bulkEvent}/>
 
 
             </div>

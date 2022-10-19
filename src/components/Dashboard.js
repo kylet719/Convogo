@@ -7,10 +7,63 @@ import Sidebar from "./Sidebar";
 import EventModal from "./Modal/EventModal";
 
 
-const Dashboard = ({ userEvents, attendingEvents, signout, newEvent, deleteEvent, pendingInvites, leaveEvent }) => {
-
+const Dashboard = ({ currentUser, userEvents, attendingEvents, pendingInvites }) => {
   const userObj = () => {
     return jwtDecode(localStorage.getItem("user"));
+  }
+
+  const eventPackage = () => {
+    return userEvents.concat(attendingEvents)
+  }
+
+  //#region Event CRUD
+  const createEvent = (title) => {
+    const obj = jwtDecode(localStorage.getItem("user"))
+    const newEvent = {
+      activities: [],
+      discussion: [],
+      editors: [],
+      owner: obj["sub"],
+      title: title,
+      itinerary: []
+    };
+
+    const addOwner = {
+      googleId: obj["sub"],
+      name: obj["name"] + " (Organizer)",
+      email: obj["email"],
+      picture: obj["picture"]
+    }
+    newEvent["editors"].push(addOwner);
+
+    axios.post('http://localhost:5000/events/add', newEvent).then(res => {
+      currentUser["oEventsInProgress"].push(res.data);
+      axios.post('http://localhost:5000/users/update/' + jwtDecode(localStorage.getItem("user"))["sub"], currentUser).then(res => {
+        window.location = '/';
+      });
+    });
+  }
+
+  const deleteEvent = (id) => {
+    axios.delete(`http://localhost:5000/events/${id}`).then(res => {
+      currentUser["oEventsInProgress"] = currentUser["oEventsInProgress"].filter(item => item !== id)
+      axios.post(`http://localhost:5000/users/update/${currentUser["googleId"]}`, currentUser).then(res => {
+        window.location = '/';
+      });
+    });
+  }
+
+  const leaveEvent = (eventId) => {
+    currentUser["pEventsInProgress"] = currentUser["pEventsInProgress"].filter(item => item !== eventId)
+    axios.post(`http://localhost:5000/users/update/${currentUser["googleId"]}`, currentUser).then(res => {
+      axios.get(`http://localhost:5000/events/${eventId}`).then(res => {
+        var receivedEvent = res.data;
+        receivedEvent["editors"] = receivedEvent["editors"].filter(i=> i.googleId !== currentUser["googleId"])
+        axios.post(`http://localhost:5000/events/update/${eventId}`, receivedEvent).then(() => {
+          window.location = '/';
+        })
+      });
+    });
   }
 
   const joinEvent = (eventId, inviteId) => {
@@ -40,39 +93,43 @@ const Dashboard = ({ userEvents, attendingEvents, signout, newEvent, deleteEvent
       })
     });
   }
-
+  
   const declineEvent = (inviteId) => {
     axios.delete(`http://localhost:5000/invitations/${inviteId}`).then(window.location = '/')
   }
+  //#endregion
 
   return (
     <div className="drawer drawer-mobile">
-      <Sidebar userObject={userObj()} />
+      <Sidebar userObject={userObj()} eventPackages={userEvents.concat(attendingEvents)}/>
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
         <div className="dashview divide-x flex items-start">
 
+          {/* MY EVENTS */}
           <div className="overflow-auto mx-2 min-h-screen max-h-screen relative">
             <h1 className="heading">My Events</h1>
             {userEvents.map((event) => (
               <div className="dayTitle">
                 <Link className={"whiteFont"} style={{ textDecoration: 'none' }} to={`/event/${event._id}`}>{event.title}</Link>
-                <button className='btn btn-xs btn-outline btn-error float-right' onClick={() => leaveEvent(event._id)}>Delete</button>
+                <button className='btn btn-xs btn-outline btn-error float-right' onClick={() => deleteEvent(event._id)}>Delete</button>
               </div>
             ))}
-            <EventModal createEvent={newEvent}/>
+            <EventModal createEvent={createEvent} />
           </div>
 
+           {/* ATTENDING */}
           <div className="overflow-auto mx-2 min-h-screen max-h-screen">
             <h1 className="heading">Attending </h1>
             {attendingEvents.map((event) => (
               <div className="dayTitle">
                 <Link className={"whiteFont"} style={{ textDecoration: 'none' }} to={`/event/${event._id}`}>{event.title}</Link>
-                <button className='btn btn-xs btn-outline btn-error float-right' onClick={() => deleteEvent(event._id, null, null)}>Leave</button>
+                <button className='btn btn-xs btn-outline btn-error float-right' onClick={() => leaveEvent(event._id, null, null)}>Leave</button>
               </div>
             ))}
           </div>
 
+          {/* PENDING INVITES */}
           <div className="overflow-auto mx-2 min-h-screen max-h-screen">
             <h1 className="heading">Pending Invites</h1>
             {pendingInvites.map((invite) => (
@@ -84,14 +141,7 @@ const Dashboard = ({ userEvents, attendingEvents, signout, newEvent, deleteEvent
               </div>
             ))}
           </div>
-
         </div>
-
-
-
-
-
-
       </div>
     </div>
   )

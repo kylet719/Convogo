@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from 'react'
 import ScrollToBottom from "react-scroll-to-bottom";
 
-function Chat({username, discussionId, socket, deleteDiscussion, account}) {
+function Chat({discussionId, socket, deleteDiscussion, account}) {
     const [currentMessage, setCurrentMessage] = useState("");
     const [chatTitle, setChatTitle] = useState("No title");
     const [messageList, setMessageList] = useState([]);

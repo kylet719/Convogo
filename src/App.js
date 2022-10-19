@@ -7,14 +7,16 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import jwtDecode from "jwt-decode";
 import Login from "./components/Login";
 import axios from "axios";
-import Sidebar from "./components/Sidebar";
 
 function App() {
   const [loggedIn, setLogIn] = useState(false)
   const [eventsLoaded, setEventsLoaded] = useState(false)
+  //This user is our own userSchema
   const [currentUser, setUser] = useState()
   const [pendingInvites, setInvites] = useState([])
+  //Events owned and ongoing
   const [eventItemsOO, setEventItemsOO] = useState([])
+  //Events attending and ongoing
   const [eventItemsAO, setEventItemsAO] = useState([])
 
   useEffect(() => {
@@ -48,10 +50,11 @@ function App() {
           axios.post('http://localhost:5000/events/batch', batchAttending).then(resThree => {
             setEventItemsAO(resThree.data);
             setEventsLoaded(true);
+            
+
+
           })
         })
-
-        
 
         const getInvites = {
           email: obj["email"]
@@ -64,6 +67,7 @@ function App() {
     }
   }, [])
 
+  //#region Sign-in sign-out
   const handleSignIn = (response) => {
     const obj = jwtDecode(response.credential);
     console.log(obj["sub"])
@@ -115,54 +119,7 @@ function App() {
     localStorage.removeItem("user");
     window.location = '/';
   }
-
-  const createEvent = (title) => {
-    const obj = jwtDecode(localStorage.getItem("user"))
-    const newEvent = {
-      activities: [],
-      discussion: [],
-      editors: [],
-      owner: obj["sub"],
-      title: title,
-      itinerary: []
-    };
-
-    const addOwner = {
-      googleId: obj["sub"],
-      name: obj["name"] + " (Organizer)",
-      email: obj["email"],
-      picture: obj["picture"]
-    }
-    newEvent["editors"].push(addOwner);
-
-    axios.post('http://localhost:5000/events/add', newEvent).then(res => {
-      currentUser["oEventsInProgress"].push(res.data);
-      axios.post('http://localhost:5000/users/update/' + jwtDecode(localStorage.getItem("user"))["sub"], currentUser).then(res => {
-        window.location = '/';
-      });
-    });
-  }
-  const deleteEvent = (id, owner, editorList) => {
-    axios.delete(`http://localhost:5000/events/${id}`).then(res => {
-      currentUser["oEventsInProgress"] = currentUser["oEventsInProgress"].filter(item => item !== id)
-      axios.post(`http://localhost:5000/users/update/${currentUser["googleId"]}`, currentUser).then(res => {
-        window.location = '/';
-      });
-    });
-  }
-
-  const leaveEvent = (eventId) => {
-    currentUser["pEventsInProgress"] = currentUser["pEventsInProgress"].filter(item => item !== eventId)
-    axios.post(`http://localhost:5000/users/update/${currentUser["googleId"]}`, currentUser).then(res => {
-      axios.get(`http://localhost:5000/events/${eventId}`).then(res => {
-        var receivedEvent = res.data;
-        receivedEvent["editors"] = receivedEvent["editors"].filter(i=> i.googleId !== currentUser["googleId"])
-        axios.post(`http://localhost:5000/events/update/${eventId}`, receivedEvent).then(() => {
-          window.location = '/';
-        })
-      });
-    });
-  }
+  //#endregion
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -172,7 +129,7 @@ function App() {
           <h1 className="text-3xl font-bold"><Link to='/' className={"titleCard"} style={{ textDecoration: 'none' }}>CONVOGO</Link></h1>
           {/* <div id="signInDiv"></div> */}
           <Routes>
-            <Route path='/' element={<>{ loggedIn ? (eventsLoaded ? (<><Dashboard userEvents={eventItemsOO} attendingEvents = {eventItemsAO} signout = {handleSignOut} newEvent ={createEvent} deleteEvent = {deleteEvent} pendingInvites = {pendingInvites} leaveEvent={leaveEvent}/></>) : ("Loading")): (<Login/>) }</>} />
+            <Route path='/' element={<>{ loggedIn ? (eventsLoaded ? (<><Dashboard currentUser= {currentUser} userEvents={eventItemsOO} attendingEvents = {eventItemsAO} pendingInvites = {pendingInvites}/></>) : ("Loading")): (<Login/>) }</>} />
             <Route path='/event/:id' element={<Event />} />
           </Routes>
           <footer></footer>
