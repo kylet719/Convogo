@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./Modal.css";
-import axios from 'axios'
-import ReactDatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
 
 const newActivity = {
@@ -15,25 +13,12 @@ const newActivity = {
 // GET INPUTS TO POPULATE NEW ACTVITY
 
 export default function Modal({ param, submitButton }) {
-  const [modal, setModal] = useState(false);
-  const [newTitle, setTitle] = useState("");
-  const [newLocation, setLocation] = useState("");
-  const [newTime, setTime] = useState("");
-  const [newDate, setDate] = useState(new Date());
-  const [newRelatedDiscussions, setRelatedDiscussions] = useState([]);
   const [activity, setActivity] = useState(newActivity);
-
-  //#region  Modal stuff dunno what it does
-  if (modal) {
-    document.body.classList.add('active-modal')
-  } else {
-    document.body.classList.remove('active-modal')
-  }
-  //#endregion
 
   const onSubmit = (e) => {
     e.preventDefault()
     submitButton(activity)
+    document.getElementById('my-modal-6').checked = false;
   }
 
   const handleInputChange = (e) => {
@@ -43,7 +28,6 @@ export default function Modal({ param, submitButton }) {
       [name]: value,
     });
   };
-
 
   return (
     <div className="">

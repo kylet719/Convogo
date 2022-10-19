@@ -3,8 +3,7 @@ import "./Modal.css";
 import ReactDatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
 
-export default function Modal({ param, submitButton }) {
-  const [modal, setModal] = useState(false);
+export default function Modal({submitButton }) {
   const [newDate, setDate] = useState(new Date());
 
   const onSubmit = (e) => {
