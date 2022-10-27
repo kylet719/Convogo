@@ -78,7 +78,7 @@ io.on("connection", (socket) => {
 
 })
 
-const socketPort = process.env.PORT || 5001;
+const socketPort = process.env.SOCKET_PORT || 5001;
 
 server.listen(socketPort, () => {
   console.log('listening on *:5001');
