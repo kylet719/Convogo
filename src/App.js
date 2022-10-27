@@ -19,7 +19,7 @@ function App() {
   //Events attending and ongoing
   const [eventItemsAO, setEventItemsAO] = useState([])
 
-  const baseUrl = process.env.NODE_ENV === "production" ? "http://convogo.herokuapp.com" : "http://localhost:5000" 
+  const baseUrl = process.env.NODE_ENV === "production" ? "https://convogo.herokuapp.com" : "http://localhost:5000" 
 
   useEffect(() => {
     /*global google*/

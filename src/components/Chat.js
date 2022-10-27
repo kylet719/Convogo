@@ -8,7 +8,7 @@ function Chat({discussionId, socket, deleteDiscussion, account}) {
     const [chatTitle, setChatTitle] = useState("No title");
     const [messageList, setMessageList] = useState([]);
 
-    const baseUrl = process.env.NODE_ENV === "production" ? "http://convogo.herokuapp.com" : "http://localhost:5000" 
+    const baseUrl = process.env.NODE_ENV === "production" ? "https://convogo.herokuapp.com" : "http://localhost:5000" 
 
     useEffect(() => {
       //Initial pull to get chatlog from db
