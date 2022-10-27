@@ -16,6 +16,7 @@ import Sidebar from "./Sidebar";
 
 const socket = io.connect("http://localhost:5001")
 
+
 const Event = () => {
   const [eventItems, setEventItems] = useState("")
   const [status, setComplete] = useState(false)
@@ -30,6 +31,8 @@ const Event = () => {
     title: "test",
   };
 
+  const baseUrl = process.env.NODE_ENV === "production" ? "http://convogo.herokuapp.com" : "http://localhost:5000" 
+
   const [activity, setActivity] = useState(testActivity)
 
 
@@ -38,14 +41,14 @@ const Event = () => {
     const obj = jwtDecode(localStorage.getItem("user"));
     setUserObject(obj);
 
-    axios.get(`http://localhost:5000/users/${obj["sub"]}`).then(res => {
+    axios.get(`${baseUrl}/users/${obj["sub"]}`).then(res => {
       setUserSchema(res.data)
 
       const batchRequest = {
         ids: res.data["oEventsInProgress"].concat(res.data["pEventsInProgress"])
       }
 
-      axios.post('http://localhost:5000/events/batch', batchRequest).then(r => {
+      axios.post(`${baseUrl}/events/batch`, batchRequest).then(r => {
         setBulkEvents(r.data);
     })
 
@@ -59,7 +62,7 @@ const Event = () => {
   }, [])
 
   const fetchEvent = async (id) => {
-    const res = await fetch(`http://localhost:5000/events/${params.id}`)
+    const res = await fetch(`${baseUrl}/events/${params.id}`)
 
 
     const data = await res.json()
@@ -85,7 +88,7 @@ const Event = () => {
       itinerary: filteredItinerary
     };
     console.log(updatedEvent)
-    axios.post('http://localhost:5000/events/update/' + params.id, updatedEvent).then(res => console.log(res.data));
+    axios.post(`${baseUrl}/events/update/` + params.id, updatedEvent).then(res => console.log(res.data));
     window.location = '/event/' + params.id;
   }
 
@@ -97,7 +100,7 @@ const Event = () => {
 
     eventItems["activities"][indexOfActivityWeNeed]["date"] = null
 
-    axios.post('http://localhost:5000/events/update/' + params.id, eventItems).then(res => console.log(res.data));
+    axios.post(`${baseUrl}/events/update/` + params.id, eventItems).then(res => console.log(res.data));
     setEventItems(eventItems);
     window.location = '/event/' + params.id;
 
@@ -149,7 +152,7 @@ const Event = () => {
       itinerary: flag ? newItinerary : eventItems.itinerary
     };
     console.log(updatedEvent)
-    axios.post('http://localhost:5000/events/update/' + params.id, updatedEvent).then(res => console.log(res.data));
+    axios.post(`${baseUrl}/events/update/` + params.id, updatedEvent).then(res => console.log(res.data));
     window.location = '/event/' + params.id;
 
   }
@@ -187,7 +190,7 @@ const Event = () => {
         itinerary: eventItems.itinerary
       };
 
-      axios.post('http://localhost:5000/events/update/' + params.id, updatedEvent).then(res => console.log(res.data));
+      axios.post(`${baseUrl}/events/update/` + params.id, updatedEvent).then(res => console.log(res.data));
       setEventItems(updatedEvent)
     }
   };
@@ -207,7 +210,7 @@ const Event = () => {
 
     if (newActivities.length === eventItems["activities"].length) {
       console.log(newActivities)
-      axios.post('http://localhost:5000/events/update/' + params.id, updatedEvent).then(res => console.log(res.data));
+      axios.post(`${baseUrl}/events/update/` + params.id, updatedEvent).then(res => console.log(res.data));
 
     }
     setEventItems(updatedEvent)
@@ -243,7 +246,7 @@ const Event = () => {
       title: eventItems.title,
       itinerary: newItinerary,
     };
-    axios.post('http://localhost:5000/events/update/' + params.id, updatedEvent).then(res => console.log(res.data));
+    axios.post(`${baseUrl}/events/update/` + params.id, updatedEvent).then(res => console.log(res.data));
     setEventItems({...updatedEvent})
     window.location = '/event/' + params.id;
   }
@@ -266,7 +269,7 @@ const Event = () => {
 
     console.log(updatedEvent)
 
-    axios.post('http://localhost:5000/events/update/' + params.id, updatedEvent).then(res => console.log(res.data));
+    axios.post(`${baseUrl}/events/update/` + params.id, updatedEvent).then(res => console.log(res.data));
     setEventItems({...updatedEvent})
     window.location = '/event/' + params.id;
 
@@ -284,18 +287,18 @@ const Event = () => {
     }
 
     console.log(newChatLog);
-    axios.post('http://localhost:5000/chats/add', newChatLog).then(res => {
+    axios.post(`${baseUrl}/chats/add`, newChatLog).then(res => {
       eventItems["discussion"].push(res.data);
-      axios.post('http://localhost:5000/events/update/' + params.id, eventItems).then(res => console.log(res.data));
+      axios.post(`${baseUrl}/events/update/` + params.id, eventItems).then(res => console.log(res.data));
       setEventItems(eventItems);
       window.location = '/event/' + params.id;
     });
   }
 
   const deleteDiscussion = (discussionId) => {
-    axios.delete(`http://localhost:5000/chats/${discussionId}`).then(res => console.log(res.data));
+    axios.delete(`${baseUrl}/chats/${discussionId}`).then(res => console.log(res.data));
     eventItems["discussion"] = eventItems["discussion"].filter(item => item != discussionId);
-    axios.post('http://localhost:5000/events/update/' + params.id, eventItems).then(res => console.log(res.data));
+    axios.post(`${baseUrl}/events/update/` + params.id, eventItems).then(res => console.log(res.data));
     setEventItems(eventItems);
     window.location = '/event/' + params.id;
   }
@@ -310,7 +313,7 @@ const Event = () => {
       receiveEmail: email,
       note: note
     };
-    axios.post("http://localhost:5000/invitations/add", newInvite).then(res => console.log(res.data));
+    axios.post(`${baseUrl}/invitations/add`, newInvite).then(res => console.log(res.data));
   }
 
   const updateActivity = (activityID, location, time, title, details) => {
@@ -325,7 +328,7 @@ const Event = () => {
     eventItems["activities"][indexOfActivityWeNeed]["details"] = details;
 
 
-    axios.post('http://localhost:5000/events/update/' + params.id, eventItems).then(res => console.log(res.data));
+    axios.post(`${baseUrl}/events/update/` + params.id, eventItems).then(res => console.log(res.data));
     setEventItems(eventItems);
     window.location = '/event/' + params.id;
 
@@ -334,12 +337,12 @@ const Event = () => {
   const getUninvited = (uninvitedId) => {
     console.log(uninvitedId)
     eventItems["editors"] = eventItems["editors"].filter(i => i.googleId !== uninvitedId);
-    axios.post('http://localhost:5000/events/update/' + params.id, eventItems).then(res => {
+    axios.post(`${baseUrl}/events/update/` + params.id, eventItems).then(res => {
       setEventItems(eventItems);
-      axios.get(`http://localhost:5000/users/${uninvitedId}`).then(res => {
+      axios.get(`${baseUrl}/users/${uninvitedId}`).then(res => {
         const personUninvited = res.data;
         personUninvited["pEventsInProgress"] = personUninvited["pEventsInProgress"].filter(i => i !== eventItems["_id"])
-        axios.post(`http://localhost:5000/users/update/${uninvitedId}`, personUninvited).then(res => {
+        axios.post(`${baseUrl}/users/update/${uninvitedId}`, personUninvited).then(res => {
           window.location = '/event/' + params.id;
         });
       });
@@ -387,7 +390,7 @@ const Event = () => {
                   <div className="relative min-h-screen max-h-screen">
                     <h1 className="title left absolute">{eventItems["title"]}</h1>
                     <div className="absolute bottom-0 left-0">
-                      <button className="btn" onClick={() => console.log(eventItems)}>Log Current Event</button>
+                      <button className="btn" onClick={() => console.log(baseUrl)}>Log Current Event</button>
                       <button className="btn" onClick={() => console.log(userObject)}>Test</button>
                     </div>
                   </div>

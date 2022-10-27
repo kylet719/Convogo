@@ -6,11 +6,12 @@ import jwtDecode from "jwt-decode";
 import Sidebar from "./Sidebar";
 import EventModal from "./Modal/EventModal";
 
-
 const Dashboard = ({ currentUser, userEvents, attendingEvents, pendingInvites }) => {
   const userObj = () => {
     return jwtDecode(localStorage.getItem("user"));
   }
+
+  const baseUrl = process.env.NODE_ENV === "production" ? "http://convogo.herokuapp.com" : "http://localhost:5000" 
 
   const eventPackage = () => {
     return userEvents.concat(attendingEvents)
@@ -36,18 +37,18 @@ const Dashboard = ({ currentUser, userEvents, attendingEvents, pendingInvites })
     }
     newEvent["editors"].push(addOwner);
 
-    axios.post('http://localhost:5000/events/add', newEvent).then(res => {
+    axios.post(`${baseUrl}/events/add`, newEvent).then(res => {
       currentUser["oEventsInProgress"].push(res.data);
-      axios.post('http://localhost:5000/users/update/' + jwtDecode(localStorage.getItem("user"))["sub"], currentUser).then(res => {
+      axios.post(`${baseUrl}/users/update/` + jwtDecode(localStorage.getItem("user"))["sub"], currentUser).then(res => {
         window.location = '/';
       });
     });
   }
 
   const deleteEvent = (id) => {
-    axios.delete(`http://localhost:5000/events/${id}`).then(res => {
+    axios.delete(`${baseUrl}/events/${id}`).then(res => {
       currentUser["oEventsInProgress"] = currentUser["oEventsInProgress"].filter(item => item !== id)
-      axios.post(`http://localhost:5000/users/update/${currentUser["googleId"]}`, currentUser).then(res => {
+      axios.post(`${baseUrl}/users/update/${currentUser["googleId"]}`, currentUser).then(res => {
         window.location = '/';
       });
     });
@@ -55,11 +56,11 @@ const Dashboard = ({ currentUser, userEvents, attendingEvents, pendingInvites })
 
   const leaveEvent = (eventId) => {
     currentUser["pEventsInProgress"] = currentUser["pEventsInProgress"].filter(item => item !== eventId)
-    axios.post(`http://localhost:5000/users/update/${currentUser["googleId"]}`, currentUser).then(res => {
-      axios.get(`http://localhost:5000/events/${eventId}`).then(res => {
+    axios.post(`${baseUrl}/users/update/${currentUser["googleId"]}`, currentUser).then(res => {
+      axios.get(`${baseUrl}/events/${eventId}`).then(res => {
         var receivedEvent = res.data;
         receivedEvent["editors"] = receivedEvent["editors"].filter(i=> i.googleId !== currentUser["googleId"])
-        axios.post(`http://localhost:5000/events/update/${eventId}`, receivedEvent).then(() => {
+        axios.post(`${baseUrl}/events/update/${eventId}`, receivedEvent).then(() => {
           window.location = '/';
         })
       });
@@ -74,18 +75,18 @@ const Dashboard = ({ currentUser, userEvents, attendingEvents, pendingInvites })
       email: obj["email"],
       picture: obj["picture"],
     }
-    axios.get(`http://localhost:5000/events/${eventId}`).then(res => {
+    axios.get(`${baseUrl}/events/${eventId}`).then(res => {
       var receivedEvent = res.data;
       receivedEvent["editors"].push(newMember)
-      axios.post(`http://localhost:5000/events/update/${eventId}`, receivedEvent).then(() => {
-        axios.delete(`http://localhost:5000/invitations/${inviteId}`);
+      axios.post(`${baseUrl}/events/update/${eventId}`, receivedEvent).then(() => {
+        axios.delete(`${baseUrl}/invitations/${inviteId}`);
 
-        axios.get('http://localhost:5000/users/' + obj["sub"]).then(resTwo => {
+        axios.get(`${baseUrl}/users/` + obj["sub"]).then(resTwo => {
           var updatedUser = resTwo.data;
 
           updatedUser["pEventsInProgress"].push(eventId)
           console.log(updatedUser)
-          axios.post('http://localhost:5000/users/update/' + obj["sub"], updatedUser).then(update => {
+          axios.post(`${baseUrl}/users/update/` + obj["sub"], updatedUser).then(update => {
             console.log(update.data)
             window.location = '/'
           })
@@ -95,7 +96,7 @@ const Dashboard = ({ currentUser, userEvents, attendingEvents, pendingInvites })
   }
   
   const declineEvent = (inviteId) => {
-    axios.delete(`http://localhost:5000/invitations/${inviteId}`).then(window.location = '/')
+    axios.delete(`${baseUrl}/invitations/${inviteId}`).then(window.location = '/')
   }
   //#endregion
 

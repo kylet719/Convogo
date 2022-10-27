@@ -19,6 +19,8 @@ function App() {
   //Events attending and ongoing
   const [eventItemsAO, setEventItemsAO] = useState([])
 
+  const baseUrl = process.env.NODE_ENV === "production" ? "http://convogo.herokuapp.com" : "http://localhost:5000" 
+
   useEffect(() => {
     /*global google*/
     const jwt = localStorage.getItem("user");
@@ -36,18 +38,18 @@ function App() {
     } else {
       // Cache does have log in session, get user data again then get relevant events (COULD BE BETTER)
       const obj = jwtDecode(localStorage.getItem("user"))
-      axios.get('http://localhost:5000/users/' + obj["sub"]).then(res => {
+      axios.get(`${baseUrl}/users/` + obj["sub"]).then(res => {
         setUser(res.data)
         setLogIn(true);
         const batchRequest = {
           ids: res.data["oEventsInProgress"]
         }
-        axios.post('http://localhost:5000/events/batch', batchRequest).then(resTwo => {
+        axios.post(`${baseUrl}/events/batch`, batchRequest).then(resTwo => {
           setEventItemsOO(resTwo.data);
           const batchAttending = {
             ids: res.data["pEventsInProgress"]
           }
-          axios.post('http://localhost:5000/events/batch', batchAttending).then(resThree => {
+          axios.post(`${baseUrl}/events/batch`, batchAttending).then(resThree => {
             setEventItemsAO(resThree.data);
             setEventsLoaded(true);
             
@@ -59,7 +61,7 @@ function App() {
         const getInvites = {
           email: obj["email"]
         }
-        axios.post('http://localhost:5000/invitations/batch', getInvites).then(res => {
+        axios.post(`${baseUrl}/invitations/batch`, getInvites).then(res => {
           setInvites(res.data);
         })
 
@@ -71,7 +73,7 @@ function App() {
   const handleSignIn = (response) => {
     const obj = jwtDecode(response.credential);
     console.log(obj["sub"])
-    axios.get('http://localhost:5000/users/' + obj["sub"]).then(res => {
+    axios.get(`${baseUrl}/users/` + obj["sub"]).then(res => {
       if (!res.data) {
         // Response was null, user has never logged in so make an entry in DB
         const newUser = {
@@ -82,7 +84,7 @@ function App() {
           name: obj["name"],
           googleId: obj["sub"]
         }
-        axios.post('http://localhost:5000/users/add', newUser).then(res => {
+        axios.post(`${baseUrl}/users/add`, newUser).then(res => {
           setUser(newUser)
         });
       } else {
@@ -91,12 +93,12 @@ function App() {
           const batchRequest = {
             ids: res.data["oEventsInProgress"]
           }
-          axios.post('http://localhost:5000/events/batch', batchRequest).then(r => {
+          axios.post(`${baseUrl}/events/batch`, batchRequest).then(r => {
             setEventItemsOO(r.data);
             const batchAttending = {
               ids: res.data["pEventsInProgress"]
             }
-            axios.post('http://localhost:5000/events/batch', batchAttending).then(resTwo => {
+            axios.post(`${baseUrl}/events/batch`, batchAttending).then(resTwo => {
               setEventItemsAO(resTwo.data);
               setEventsLoaded(true);
             })
@@ -105,7 +107,7 @@ function App() {
           const getInvites = {
             email: obj["email"]
           }
-          axios.post('http://localhost:5000/invitations/batch', getInvites).then(res => {
+          axios.post(`${baseUrl}/invitations/batch`, getInvites).then(res => {
             setInvites(res.data);
           })
       }

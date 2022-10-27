@@ -8,6 +8,8 @@ function Chat({discussionId, socket, deleteDiscussion, account}) {
     const [chatTitle, setChatTitle] = useState("No title");
     const [messageList, setMessageList] = useState([]);
 
+    const baseUrl = process.env.NODE_ENV === "production" ? "http://convogo.herokuapp.com" : "http://localhost:5000" 
+
     useEffect(() => {
       //Initial pull to get chatlog from db
       const getChatLog = async() => {
@@ -28,7 +30,7 @@ function Chat({discussionId, socket, deleteDiscussion, account}) {
     }, [socket]);
 
     const fetchChatLog = async () => {
-      const res = await fetch(`http://localhost:5000/chats/${discussionId}`)
+      const res = await fetch(`${baseUrl}/chats/${discussionId}`)
       const data = await res.json()
       return data
     }
@@ -48,7 +50,7 @@ function Chat({discussionId, socket, deleteDiscussion, account}) {
         const updatedLog = {
           messages: messageList
         };
-        axios.post('http://localhost:5000/chats/update/'+discussionId, updatedLog).then(res => console.log(res.data));
+        axios.post(`${baseUrl}/chats/update/`+discussionId, updatedLog).then(res => console.log(res.data));
         setCurrentMessage("");
       }
     };
