@@ -31,7 +31,7 @@ const Event = () => {
     title: "test",
   };
 
-  const baseUrl = process.env.NODE_ENV === "production" ? "http://convogo.herokuapp.com" : "http://localhost:5000" 
+  const baseUrl = process.env.NODE_ENV === "production" ? "https://convogo.herokuapp.com" : "http://localhost:5000" 
 
   const [activity, setActivity] = useState(testActivity)
 

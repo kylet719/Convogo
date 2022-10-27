@@ -11,7 +11,7 @@ const Dashboard = ({ currentUser, userEvents, attendingEvents, pendingInvites })
     return jwtDecode(localStorage.getItem("user"));
   }
 
-  const baseUrl = process.env.NODE_ENV === "production" ? "http://convogo.herokuapp.com" : "http://localhost:5000" 
+  const baseUrl = process.env.NODE_ENV === "production" ? "https://convogo.herokuapp.com" : "http://localhost:5000" 
 
   const eventPackage = () => {
     return userEvents.concat(attendingEvents)
