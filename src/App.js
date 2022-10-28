@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Event from "./components/Event";
 import Dashboard from "./components/Dashboard";
 import { DndProvider } from "react-dnd";
