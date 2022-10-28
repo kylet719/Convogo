@@ -21,7 +21,7 @@ export default function Nav({ userObject, eventPackages }) {
           {toggle && eventPackages? (<>
             {eventPackages.map((event) => (
                         <li>
-                        <a onClick={() => {window.location =  process.env.NODE_ENV === "production" ? '#/event/' + params.id: '/event/' + params.id;}} href="#" className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">{event.title}</a>
+                        <a onClick={() => {window.location =  process.env.NODE_ENV === "production" ? '#/event/' + event._id: '/event/' + event._id;}} href="#" className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">{event.title}</a>
                       </li>
                       ))}
           </>): ""}
