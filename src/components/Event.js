@@ -89,7 +89,7 @@ const Event = () => {
     };
     console.log(updatedEvent)
     axios.post(`${baseUrl}/events/update/` + params.id, updatedEvent).then(res => console.log(res.data));
-    window.location = '/event/' + params.id;
+    window.location =  process.env.NODE_ENV === "production" ? '#/event/' + params.id: '/event/' + params.id;
   }
 
   const removeActivity = (id, index) => {
@@ -102,7 +102,7 @@ const Event = () => {
 
     axios.post(`${baseUrl}/events/update/` + params.id, eventItems).then(res => console.log(res.data));
     setEventItems(eventItems);
-    window.location = '/event/' + params.id;
+    window.location =  process.env.NODE_ENV === "production" ? '#/event/' + params.id: '/event/' + params.id;
 
   }
 
@@ -153,7 +153,7 @@ const Event = () => {
     };
     console.log(updatedEvent)
     axios.post(`${baseUrl}/events/update/` + params.id, updatedEvent).then(res => console.log(res.data));
-    window.location = '/event/' + params.id;
+    window.location =  process.env.NODE_ENV === "production" ? '#/event/' + params.id: '/event/' + params.id;
 
   }
 
@@ -248,7 +248,7 @@ const Event = () => {
     };
     axios.post(`${baseUrl}/events/update/` + params.id, updatedEvent).then(res => console.log(res.data));
     setEventItems({...updatedEvent})
-    window.location = '/event/' + params.id;
+    window.location =  process.env.NODE_ENV === "production" ? '#/event/' + params.id: '/event/' + params.id;
   }
 
   // Can probably move back into the ActivityModal
@@ -271,8 +271,7 @@ const Event = () => {
 
     axios.post(`${baseUrl}/events/update/` + params.id, updatedEvent).then(res => console.log(res.data));
     setEventItems({...updatedEvent})
-    window.location = '/event/' + params.id;
-
+    window.location =  process.env.NODE_ENV === "production" ? '#/event/' + params.id: '/event/' + params.id;
   }
 
   const refresh = () => {
@@ -291,7 +290,7 @@ const Event = () => {
       eventItems["discussion"].push(res.data);
       axios.post(`${baseUrl}/events/update/` + params.id, eventItems).then(res => console.log(res.data));
       setEventItems(eventItems);
-      window.location = '/event/' + params.id;
+      window.location =  process.env.NODE_ENV === "production" ? '#/event/' + params.id: '/event/' + params.id;
     });
   }
 
@@ -300,7 +299,7 @@ const Event = () => {
     eventItems["discussion"] = eventItems["discussion"].filter(item => item != discussionId);
     axios.post(`${baseUrl}/events/update/` + params.id, eventItems).then(res => console.log(res.data));
     setEventItems(eventItems);
-    window.location = '/event/' + params.id;
+    window.location =  process.env.NODE_ENV === "production" ? '#/event/' + params.id: '/event/' + params.id;
   }
 
   const sendInvite = (email, note) => {
@@ -330,7 +329,7 @@ const Event = () => {
 
     axios.post(`${baseUrl}/events/update/` + params.id, eventItems).then(res => console.log(res.data));
     setEventItems(eventItems);
-    window.location = '/event/' + params.id;
+    window.location =  process.env.NODE_ENV === "production" ? '#/event/' + params.id: '/event/' + params.id;
 
   }
 
@@ -343,7 +342,7 @@ const Event = () => {
         const personUninvited = res.data;
         personUninvited["pEventsInProgress"] = personUninvited["pEventsInProgress"].filter(i => i !== eventItems["_id"])
         axios.post(`${baseUrl}/users/update/${uninvitedId}`, personUninvited).then(res => {
-          window.location = '/event/' + params.id;
+          window.location =  process.env.NODE_ENV === "production" ? '#/event/' + params.id: '/event/' + params.id;
         });
       });
     }
