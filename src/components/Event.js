@@ -271,7 +271,7 @@ const Event = () => {
 
     axios.post(`${baseUrl}/events/update/` + params.id, updatedEvent).then(res => console.log(res.data));
     setEventItems({...updatedEvent})
-    window.location =  process.env.NODE_ENV === "production" ? '#/event/' + params.id: '/event/' + params.id;
+    window.location.reload();
   }
 
   const refresh = () => {
