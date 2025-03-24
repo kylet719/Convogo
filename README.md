@@ -10,5 +10,9 @@ Convogo is a real-time collaborative event planning application that helps frien
 - **Real-time Communication**: Socket.IO
 - **Authentication**: JWT
 
+## Screenshot
+![Convogo2](https://github.com/user-attachments/assets/481683e4-5a03-4fd3-8d25-ca320b7e5aa9)
+
+
 ## Live Demo
 https://youtu.be/o_jNspFF9fg
